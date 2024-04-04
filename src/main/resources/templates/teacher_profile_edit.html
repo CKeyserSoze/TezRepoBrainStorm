@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainStorm - Profil Düzenleme</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/templates/css/custom-style.css">
+    <link rel="stylesheet" href="/templates/css/custom.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+
+        }
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px 20px;
+        }
+
+        .navbar-brand img {
+            height: 40px;
+            width: auto;
+        }
+
+        .navbar-brand span {
+            color: green;
+            font-family: 'Arial', sans-serif;
+            font-size: 24px;
+            margin-left: 10px;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .profile-edit {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 0 10px 10px;
+            width: 100%;
+            max-width: 600px;
+        }
+        .profile-edit img {
+            width: 150px;
+            height: 150px;
+            border-radius: 10%;
+            margin-bottom: 0px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .profile-edit h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #4CAF50;
+            font-weight: 600;
+            text-align: center;
+        }
+        .edit-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .edit-form label {
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: 600;
+            text-align: left;
+            width: 100%;
+        }
+        .edit-form input[type="text"],
+        .edit-form input[type="email"],
+        .edit-form input[type="password"],
+        .edit-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        .edit-form input[type="text"]:focus,
+        .edit-form input[type="email"]:focus,
+        .edit-form input[type="password"]:focus,
+        .edit-form textarea:focus {
+            border-color: #4CAF50;
+        }
+        .edit-form button {
+            background-color: #4CAF50;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            max-width: 200px;
+            align-self: center;
+        }
+        .edit-form button:hover {
+            background-color: #45a049;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .profile-edit {
+                padding: 30px;
+                width: 90%;
+            }
+            .profile-edit img {
+                width: 120px;
+                height: 120px;
+            }
+        }
+        .error-message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8d7da; /* Kırmızı arkaplan rengi */
+            color: #721c24; /* Kırmızı metin rengi */
+            border: 1px solid #f5c6cb; /* Kırmızı kenarlık rengi */
+        }
+
+        /* Başarı mesajları */
+        .success-message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #d4edda; /* Yeşil arkaplan rengi */
+            color: #155724; /* Yeşil metin rengi */
+            border: 1px solid #c3e6cb; /* Yeşil kenarlık rengi */
+        }
+        textarea {
+            resize: none; /* Text alanının yeniden boyutlandırılmasını devre dışı bırakır */
+        }
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg mb-3">
+    <a th:href="@{/teacher/user/{id}/profile(id=${id})}" class="navbar-brand">
+        <img src="/static/images/brain_logo3.jpg">
+        <span>BrainStorm</span>
+    </a>
+</nav>
+<div class="container">
+    <div class="profile-edit">
+        <img src="/static/images/teacher_profile_pic.png" alt="Öğretmen İkonu">
+        <div th:if="${errorMessage}" class="error-message">
+            <p th:text="${errorMessage}" class="error-text"></p>
+        </div>
+        <div th:if="${successMessage}" class="success-message">
+            <p th:text="${successMessage}" class="success-text"></p>
+        </div>
+        <div class="edit-form">
+            <h2>Profil Düzenle</h2>
+            <form id="edit-form" th:action="@{/teacher/user/{id}/profile/edit(id=${id})}" method="post">
+                <input type="hidden" id="userId" name="userId" th:value="${id}">
+                <div class="form-group">
+                    <label for="first_name">Adı</label>
+                    <input type="text" id="first_name" name="first_name" placeholder="Adınızı Girin" th:value="${teacher.getName()}">
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Soyadı</label>
+                    <input type="text" id="last_name" name="last_name" placeholder="Soyadınızı Girin" th:value="${teacher.getSurname()}">
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" placeholder="E-mail Adresinizi Girin" th:value="${teacher.getEmail()}">
+                </div>
+                <div class="form-group">
+                    <label for="password">Şifre</label>
+                    <input type="password" id="password" name="password" placeholder="Şifrenizi Girin" th:value="${teacher.getPassword()}">
+                </div>
+                <div class="form-group">
+                    <label for="educationLevel">Eğitim Seviyesi</label>
+                    <select id="educationLevel" name="educationLevel">
+                        <option value="Lise" th:selected="${teacher.educationLevel == 'Lise'}">Lise</option>
+                        <option value="Ön Lisans" th:selected="${teacher.educationLevel == 'Ön Lisans'}">Ön Lisans</option>
+                        <option value="Lisans" th:selected="${teacher.educationLevel == 'Lisans'}">Lisans</option>
+                        <option value="Yüksek Lisans" th:selected="${teacher.educationLevel == 'Yüksek Lisans'}">Yüksek Lisans</option>
+                        <option value="Doktora" th:selected="${teacher.educationLevel == 'Doktora'}">Doktora</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="expertise">Uzmanlık</label>
+                    <select id="expertise" name="expertise">
+                        <option value="Matematik" th:selected="${'Matematik' == expertiseArea}">Matematik</option>
+                        <option value="Fizik" th:selected="${'Fizik' == expertiseArea}">Fizik</option>
+                        <option value="Kimya" th:selected="${'Kimya' == expertiseArea}">Kimya</option>
+                        <option value="Türk Dili ve Edebiyatı" th:selected="${'Türk Dili ve Edebiyatı' == expertiseArea}">Türk Dili ve Edebiyatı</option>
+                        <option value="Biyoloji" th:selected="${'Biyoloji' == expertiseArea}">Biyoloji</option>
+                        <option value="İngilizce" th:selected="${'İngilizce' == expertiseArea}">İngilizce</option>
+                        <option value="Tarih" th:selected="${'Tarih' == expertiseArea}">Tarih</option>
+                        <option value="Coğrafya" th:selected="${'Coğrafya' == expertiseArea}">Coğrafya</option>
+                        <option value="Felsefe" th:selected="${'Felsefe' == expertiseArea}">Felsefe</option>
+                        <option value="Müzik" th:selected="${'Müzik' == expertiseArea}">Müzik</option>
+                        <option value="Resim" th:selected="${'Resim' == expertiseArea}">Resim</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="yearsOfExperience">Deneyim Yılı</label>
+                    <select id="yearsOfExperience" name="yearsOfExperience">
+                        <option value="0-1 yıl" th:selected="${'0-1 yıl' == yearsOfExperience}">0-1 Yıl</option>
+                        <option value="1-2 yıl" th:selected="${'1-2 yıl' == yearsOfExperience}">1-2 Yıl</option>
+                        <option value="2-3 yıl" th:selected="${'2-3 yıl' == yearsOfExperience}">2-3 Yıl</option>
+                        <option value="3-4 yıl" th:selected="${'3-4 yıl' == yearsOfExperience}">3-4 Yıl</option>
+                        <option value="4+ yıl" th:selected="${'4+ yıl' == yearsOfExperience}">4+ Yıl</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="information">Kişisel Bilgiler</label>
+                    <textarea id="information" name="information" placeholder="Kişisel bilgilerinizi girin" th:text="${teacher.getTeacherInformation()}"></textarea>
+                </div>
+                <button type="submit">Kaydet</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    document.getElementById("edit-form").addEventListener("submit", function(event) {
+        event.preventDefault(); // Formun varsayılan davranışını engelle
+
+        // URL'den elde edilen ID'yi al
+        var url = window.location.href;
+        var userId = url.substring(url.lastIndexOf('/') + 1);
+
+        // Gizli input alanına ID'yi yerleştir
+        document.getElementById('userId').value = userId;
+
+        // Form alanlarını kontrol et
+        var firstName = document.getElementById('first_name').value;
+        var lastName = document.getElementById('last_name').value;
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+
+        if (firstName === '' || lastName === '' || email === '' || password === '') {
+            alert('Lütfen tüm alanları doldurun.');
+            return;
+        }
+
+        // Formu gönder
+        this.submit();
+    });
+</script>
+
+</body>
+</html>

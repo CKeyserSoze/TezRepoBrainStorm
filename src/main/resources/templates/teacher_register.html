@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Ol</title>
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('/static/images/teacher_brain_background.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .signup-container {
+            width: 400px;
+            background-color: rgba(255, 255, 255, 0.7); /* Opaklık eklenmiş beyaz arka plan */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .signup-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .signup-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .signup-container input,
+        .signup-container select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .signup-container button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .signup-container button:hover {
+            background-color: #45a049;
+        }
+
+        .login-link {
+            color: #3498db;
+            text-decoration: none;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="signup-container">
+    <h2 style="color: green;">BrainStorm'da Eğitmen Ol</h2>
+    <form id="signup-form" th:action="@{/teacher/register}" method="post" onsubmit="return validateForm()">
+        <!-- Adım 1: Kullanıcı Bilgileri -->
+        <div class="form-step" id="step1">
+            <label for="first-name"><i class="fa-solid fa-image-portrait"></i> Ad:</label>
+            <input type="text" id="first-name" name="first-name" required>
+
+            <label for="last-name"><i class="fa-solid fa-image-portrait"></i> Soyad:</label>
+            <input type="text" id="last-name" name="last-name" required>
+
+            <label for="email"><i class="fa-solid fa-envelope"></i> E-mail:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="new-password"><i class="fa-solid fa-lock"></i> Şifre:</label>
+            <input type="password" id="new-password" name="new-password" required>
+
+            <label for="confirm-password"><i class="fa-solid fa-lock"></i> Şifre Tekrar:</label>
+            <input type="password" id="confirm-password" name="confirm-password" required>
+
+            <label for="education"><i class="fa-solid fa-graduation-cap"></i> Eğitim Durumu:</label>
+            <select id="education" name="education" required>
+                <option value="Lise">Lise</option>
+                <option value="Ön Lisans">Ön Lisans</option>
+                <option value="Lisans">Lisans</option>
+                <option value="Yüksek Lisans">Yüksek Lisans</option>
+                <option value="Doktora">Doktora</option>
+            </select>
+
+            <label for="expertise"><i class="fa-solid fa-user-tie"></i> Uzmanlık Alanı:</label>
+            <select id="expertise" name="expertise" required>
+                <option value="Matematik">Matematik</option>
+                <option value="Fizik">Fizik</option>
+                <option value="Kimya">Kimya</option>
+                <option value="Türk Dili ve Edebiyatı">Türk Dili ve Edebiyatı</option>
+                <option value="Biyoloji">Biyoloji</option>
+                <option value="İngilizce">İngilizce</option>
+                <option value="Tarih">Tarih</option>
+                <option value="Coğrafya">Coğrafya</option>
+                <option value="Felsefe">Felsefe</option>
+                <option value="MÜzik">Müzik</option>
+                <option value="Resim">Resim</option>
+            </select>
+
+            <label for="experience"><i class="fa-solid fa-arrow-down-wide-short"></i> Deneyim Yılı:</label>
+            <select id="experience" name="experience" required>
+                <option value="0-1 yıl">0-1 yıl</option>
+                <option value="1-2 yıl">1-2 yıl</option>
+                <option value="2-3 yıl">2-3 yıl</option>
+                <option value="3-4 yıl">3-4 yıl</option>
+                <option value="4+ yıl">4+ yıl</option>
+            </select>
+
+            <button type="submit">Eğitmen Ol</button>
+            <p id="error-message" class="error-message" th:text="${error}"></p>
+        </div>
+    </form>
+
+    <script th:inline="javascript">
+        function validateForm() {
+            var email = document.getElementById("email").value;
+            var firstName = document.getElementById("first-name").value;
+            var lastName = document.getElementById("last-name").value;
+            var newPassword = document.getElementById("new-password").value;
+            var confirmPassword = document.getElementById("confirm-password").value;
+
+            if (email === "" || firstName === "" || lastName === "" || newPassword === "" || confirmPassword === "") {
+                document.getElementById("error-message").innerText = "Lütfen tüm alanları doldurun.";
+                return false;
+            } else if (newPassword !== confirmPassword) {
+                document.getElementById("error-message").innerText = "Şifreler eşleşmiyor.";
+                return false;
+            }
+            return true;
+        }
+    </script>
+</div>
+</body>
+</html>

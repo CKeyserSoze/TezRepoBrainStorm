@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainStorm - Kurs Ekle</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+        header {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        header .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        header img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 32px;
+            cursor: pointer;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+
+        }
+        .course-form {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .course-form h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #343a40;
+            text-align: center;
+        }
+        .form-container {
+            display: flex;
+            align-items: flex-start;
+        }
+        .form-container img {
+            width: 300px;
+            height: 300px;
+            border-radius: 5px;
+            margin-right: 20px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .form-container .form-fields {
+            flex: 1;
+        }
+        .form-fields label {
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+        .form-fields input[type="text"],
+        .form-fields textarea,
+        .form-fields input[type="number"],
+        .form-fields select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        .form-fields input[type="text"]:focus,
+        .form-fields textarea:focus,
+        .form-fields input[type="number"]:focus,
+        .form-fields select:focus {
+            border-color: #007bff;
+        }
+        .form-fields button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .form-fields button:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+        textarea {
+            resize: none; /* Text alanının yeniden boyutlandırılmasını devre dışı bırakır */
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo">
+        <a th:href="@{/teacher/user/{id}(id=${id})}" style="text-decoration: none; color: inherit;">
+            <h1>BrainStorm</h1>
+        </a>
+    </div>
+</header>
+<div class="container">
+
+    <div class="course-form">
+        <h2>Yeni Kurs Ekle</h2>
+        <form id="courseForm" th:action="@{/teacher/user/{id}/addcourse(id=${id})}" method="post" onsubmit="return validateForm()">
+
+            <div class="form-container">
+                <img src="/static/images/course-image2.jpg" alt="Kurs Görseli">
+                <input type="hidden" id="id" name="id" value="${id}">
+                <div class="form-fields">
+
+                    <label for="courseName">Kurs Adı</label>
+                    <input type="text" id="courseName" name="courseName" placeholder="Kurs Adı">
+
+                    <label for="description">Kurs Açıklaması</label>
+                    <textarea id="description" name="description" placeholder="Kurs Açıklaması"></textarea>
+
+                    <label for="price">Ücret Belirle (TL)</label>
+                    <input type="number" id="price" name="price" placeholder="Ücret Belirle">
+
+                    <label for="classLevel">Eğitim verilecek sınıf düzeyini seçin:</label>
+                    <select id="classLevel" name="classLevel">
+                        <option value="9">9. Sınıf</option>
+                        <option value="10">10. Sınıf</option>
+                        <option value="11">11. Sınıf</option>
+                        <option value="12">12. Sınıf</option>
+                    </select>
+
+                    <label for="courseSubject">Eğitim verilecek dersi seçin:</label>
+                    <select id="courseSubject" name="courseSubject">
+                        <option value="Matematik">Matematik</option>
+                        <option value="Fizik">Fizik</option>
+                        <option value="Kimya">Kimya</option>
+                        <option value="Biyoloji">Biyoloji</option>
+                        <option value="Türk Dili ve Edebiyatı">Türk Dili ve Edebiyatı</option>
+                        <option value="Coğrafya">Coğrafya</option>
+                        <option value="Tarih">Tarih</option>
+                        <option value="İngilizce">İngilizce</option>
+                        <option value="Felsefe">Felsefe</option>
+                        <option value="MÜzik">Müzik</option>
+                        <option value="Resim">Resim</option>
+                    </select>
+
+                    <button type="submit">Kursu Yayınla</button>
+                    <div class="error-message" id="errorMessage" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script th:inline="javascript">
+    document.getElementById("courseForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Formun varsayılan davranışını engelle
+
+        // URL'den id'yi al
+        var url = window.location.pathname;
+        var id = url.split("/")[3]; // 0: "", 1: "teacher", 2: "user", 3: "id"
+
+        // Formun action URL'sini oluştur
+        var actionUrl = "/teacher/user/" + id + "/addcourse";
+
+        // Formun action özniteliğini güncelle
+        document.getElementById("courseForm").action = actionUrl;
+
+        // Formu gönder
+        this.submit();
+    });
+
+    function validateForm() {
+        var courseName = document.getElementById('courseName').value;
+        var description = document.getElementById('description').value;
+        var price = document.getElementById('price').value;
+        var errorMessage = document.getElementById('errorMessage');
+
+        if (courseName === '' || description === '' || price === '') {
+            errorMessage.textContent = 'Lütfen tüm alanları doldurun.';
+            return false;
+        } else {
+            errorMessage.textContent = '';
+            return true;
+        }
+    }
+</script>
+

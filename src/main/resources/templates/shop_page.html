@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainStorm - Sepet</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Gri tonları arkaplan */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar-brand img {
+            height: 50px; /* İstediğiniz yüksekliği ayarlayın */
+            width: auto; /* Otomatik genişlik */
+        }
+
+        .course-container {
+            border: 1px solid #dee2e6; /* Gri kenarlıklar */
+            border-radius: 10px; /* Yuvarlatılmış kenarlar */
+            margin: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #fff; /* Beyaz arkaplan */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+        }
+
+        .course-details {
+            flex-grow: 1;
+            margin-left: 20px;
+        }
+
+        .course-title {
+            font-size: 24px; /* Büyük kurs başlığı */
+            font-weight: bold;
+            color: #007bff; /* Mavi renk */
+        }
+
+        .course-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #28a745; /* Yeşil renk */
+        }
+
+        #total-price {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 20px;
+            color: #dc3545; /* Kırmızı renk */
+            text-align: right;
+        }
+
+        #payment-button {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #28a745; /* Yeşil renk */
+            color: #fff; /* Beyaz renk */
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <a th:href="@{/user/home/{id}(id=${id})}" class="navbar-brand mb-3">
+        <img src="/static/images/brain_logo3.jpg" width="100px">
+        <span style="color: green; font-family: 'Arial', sans-serif; font-size: 24px; margin-left: 10px;">BrainStorm</span>
+    </a>
+</nav>
+<div class="container" id="content">
+    <!-- Dinamik kurslar için container -->
+    <div th:each="course, courseStat : ${courses}" class="course-container" th:id="'course-' + ${courseStat.index}">
+
+        <img src="/static/images/course-image2.jpg" alt="Course Image" width="150px">
+        <div class="course-details">
+            <div class="course-title" th:text="${course.name}">Kurs Adı</div>
+            <p class="course-price" th:text="'Fiyat: ' + ${course.price} + ' TL'"></p>
+        </div>
+        <form th:action="@{'/user/home/' + ${id} + '/shop/remove'}" method="post">
+            <input type="hidden" name="courseId" th:value="${course.id}" />
+            <button type="submit" class="btn btn-danger">Sil</button>
+        </form>
+
+
+    </div>
+
+    <div id="total-price" th:text="'Toplam Fiyat: ' + ${totalPrice} + ' TL'"></div>
+
+    <button class="btn btn-success" id="payment-button" onclick="redirectToPaymentScreen()">Ödemeye Geç</button>
+</div>
+
+<script th:inline="javascript">
+
+    function redirectToPaymentScreen() {
+        window.location.href = "payment_screen.html";
+    }
+</script>
+
+</body>
+</html>

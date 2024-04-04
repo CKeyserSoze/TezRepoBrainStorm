@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainStorm'da Eğitmen Olun</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            cursor: pointer;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        header p {
+            margin: 10px 0 0;
+        }
+
+        section {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .motivation,
+        .quote {
+            margin-top: 20px;
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .quote-slider-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .quote-slider-navigation {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .quote-slider-navigation button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .single-quote {
+            display: flex;
+            justify-content: space-between;
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .single-quote img {
+            width: 100%; /* Resimlerin genişliği %100 olacak */
+            max-width: 300px; /* Maksimum genişlik 300px olacak */
+            height: auto; /* Yükseklik otomatik olacak */
+            border-radius: 10px; /* Kenar yuvarlama */
+        }
+
+        .single-quote .quote-content {
+            flex: 1;
+            margin-left: 20px; /* Metin ile fotoğraf arasında boşluk */
+        }
+
+        .single-quote p {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+        }
+
+        .single-quote .author {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .quote-slider-container .single-quote:first-child {
+            display: flex;
+        }
+
+        .statistics {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .statistics p {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            outline: none;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .reasons-to-start h2 {
+            margin-bottom: 10px;
+        }
+
+        .reasons-to-start-items {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .reasons-to-start-item {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .reasons-to-start-item img {
+            width: 100px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+
+        .reasons-to-start-item p {
+            font-style: italic;
+            color: #555;
+        }
+
+        .tab-container {
+            max-width: 800px;
+            margin: 50px auto;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            flex: 1;
+            background-color: #f0f0f0;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .tab:hover {
+            background-color: #ddd;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content img {
+            float: left;
+            max-width: 320px; /* Resimlerin maksimum genişliği */
+            height: auto;
+            margin-right: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-content h2 {
+            color: #4CAF50;
+            margin-top: 0;
+        }
+
+        .tab-content p {
+            color: #555;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        .tab-content h3 {
+            color: #4CAF50;
+            margin-top: 20px;
+        }
+
+        footer {
+            background-color: green; /* Footer arka plan rengi */
+            color: #ffffff; /* Footer metin rengi */
+            padding: 5px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+<header onclick="location.href='/home'">
+    <h1>BrainStorm'da Eğitmen Olun</h1>
+    <p>Eğitmen olmaya karar verdiyseniz doğru yerdesiniz!</p>
+</header>
+
+<section>
+    <div class="motivation">
+        <div class="text-next-to-image">
+            <img src="/static/images/atatürk_2.jpg" alt="Motivasyon Görseli" width="500px">
+            <p>Dünyanın her tarafında öğretmenler insan topluluğunun en özverili ve saygıdeğer unsurlarıdır.</p>
+            <p class="author"><i><b>- Mustafa Kemal Atatürk</b></i></p>
+        </div>
+        <div class="btn-container">
+            <a th:href="@{/teacher/register}" class="btn">Eğitmen Ol</a>
+        </div>
+    </div>
+
+    <div class="reasons-to-start">
+        <h2 style="font-family: 'Arial Black', sans-serif; color: #4CAF50; text-align: center; margin-top: 40px;">Başlamak için Çok Sayıda Neden Var</h2>
+        <div class="reasons-to-start-items">
+            <div class="reasons-to-start-item">
+                <img src="/static/images/reason1.jpg" alt="Reason 1">
+                <h3 style="font-weight: bold; color: #333;">Kendi tarzınızda öğretin</h3>
+                <p>Dilediğiniz kursu, dilediğiniz şekilde yayınlayın ve kendi içeriğiniz üzerinde her zaman kontrol sahibi olun.</p>
+            </div>
+            <div class="reasons-to-start-item">
+                <img src="/static/images/reason2.jpg" alt="Reason 2">
+                <h3 style="font-weight: bold; color: #333;">Öğrencilere ilham verin</h3>
+                <p>Bildiklerinizi öğretin ve öğrencilerin ilgi alanlarını keşfetmesine, yeni yetkinlikler edinmesine ve kariyerlerinde ilerlemesine yardımcı olun.</p>
+            </div>
+            <div class="reasons-to-start-item">
+                <img src="/static/images/reason3.jpg" alt="Reason 3">
+                <h3 style="font-weight: bold; color: #333;">Kazançlı çıkın</h3>
+                <p>Profesyonel ağınızı genişletin, uzmanlık alanınızı oluşturun ve her ücretli kayıttan para kazanın.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="statistics">
+        <p>7000+ Öğrenci | 650+ Eğitmen| 10,000+ Ders</p>
+    </div>
+
+    <div class="quote">
+        <h2 style="font-family: 'Arial Black', sans-serif; color: #4CAF50; text-align: center; margin-top: 40px;">BrainStorm Eğitmenlerinden Alıntılar</h2>
+        <div class="quote-container">
+            <div class="quote-slider-container">
+                <div class="single-quote">
+                    <img src="/static/images/teacher_image.jpg" alt="Eğitmen Görseli">
+                    <div class="quote-content">
+                        <p>"Eğitmenlik, sadece bilgi aktarmak değil, aynı zamanda bir topluluğa rehberlik etmek, öğrenmeye katkıda bulunmak ve öğrencilerin potansiyellerini keşfetmelerine yardımcı olmaktır. BrainStorm'da bu büyük ailede yer alarak, öğrencilere ışık olabilir ve onların başarılarına katkıda bulunabilirsiniz."</p>
+                        <p class="author">- Malik Johnson, BrainStorm</p>
+                    </div>
+                </div>
+                <div class="single-quote">
+                    <img src="/static/images/teacher_image2.jpeg" alt="Eğitmen Görseli">
+                    <div class="quote-content">
+                        <p>"Eğitmenlik, sadece öğrencilere bilgi vermek değil, aynı zamanda onların hayatlarına dokunmak demektir. BrainStorm'da eğitmen olarak, öğrencilere ilham vererek, öğrenme süreçlerine rehberlik ederek, geleceklerini şekillendirebilecek bir etki yaratabilirsiniz"</p>
+                        <p class="author">- Mei Li, BrainStorm</p>
+                    </div>
+                </div>
+                <div class="single-quote">
+                    <img src="/static/images/teacher_image3.jpg" alt="Eğitmen Görseli">
+                    <div class="quote-content">
+                        <p>"BrainStorm'da eğitmen olarak, bilgi ve deneyimlerinizi paylaşmakla kalmayacak, aynı zamanda öğrencilere yeni ufuklar açacak, onların düşünce dünyalarını genişletecek ve potansiyellerini en üst düzeye çıkarmalarına yardımcı olacaksınız."</p>
+                        <p class="author">- Aylin Yılmaz, BrainStorm</p>
+                    </div>
+                </div>
+                <div class="single-quote">
+                    <img src="/static/images/teacher_image4.jpg" alt="Eğitmen Görseli" >
+                    <div class="quote-content">
+                        <p>"Eğitmenlik, bir topluluğun birlikte öğrenme ve büyüme yolculuğuna katılma fırsatıdır. BrainStorm'da eğitmen olarak, kendi bilgi birikiminizi paylaşmanın yanı sıra, öğrencilerden de öğrenecek ve birlikte büyüyeceksiniz."</p>
+                        <p class="author">- Eren Kaya, BrainStorm</p>
+                    </div>
+                </div>
+                <div class="quote-slider-navigation">
+                    <button onclick="prevQuote()">❮</button>
+                    <button onclick="nextQuote()">❯</button>
+                </div>
+            </div>
+        </div>
+        <div class="quote-divider"></div>
+    </div>
+
+    <div class="tab-container">
+        <div class="tabs">
+            <div class="tab" onclick="openTab(event, 'plan')">Müfredatınızı Planlayın</div>
+            <div class="tab" onclick="openTab(event, 'record')">Videonuzu Kaydedin</div>
+            <div class="tab" onclick="openTab(event, 'start')">Kursunuzu Başlatın</div>
+        </div>
+        <div id="plan" class="tab-content active">
+            <img src="/static/images/nasıl_baslanır1.jpg" alt="Nasıl Başlanır 1">
+            <h2>Müfredatınızı Planlayın</h2>
+            <p>Tutku duyduğunuz ve bilgi birikiminiz olan bir alanda başlayın. Ardından Platform İçgörüleri aracımızın yardımıyla gelecek vaat eden bir konu seçin. Öğretim stiliniz ve buna kattığınız tamamen size bağlıdır.</p>
+            <h3>Size nasıl yardımcı oluyoruz?</h3>
+            <p>İlk kursunuzu oluşturmaya yönelik çok sayıda kaynak sunuyoruz. Ayrıca eğitmen kontrol paneli ve müfredat sayfalarımız çalışmalarınızı organize etmenize yardımcı olur.</p>
+        </div>
+        <div id="record" class="tab-content">
+            <img src="/static/images/nasıl_baslanır2.jpg" alt="Nasıl Başlanır 2">
+            <h2>Videonuzu Kaydedin</h2>
+            <p>Akıllı telefon veya bir DSLR fotoğraf makinesi gibi basit araçlar kullanın. İyi bir mikrofon ekledikten sonra başlamaya hazır olursunuz. Kamerada görünmeyi sevmiyorsanız ekranınızın görüntüsünü seçin. Her iki şekilde de ücretli bir kurs için en az iki saat uzunluğunda video olmasını öneriyoruz.</p>
+            <h3>Size nasıl yardımcı oluyoruz?</h3>
+            <p>Destek ekibimiz süreç boyunca size yardımcı olur ve test videolarınıza geri bildirim verir.</p>
+        </div>
+        <div id="start" class="tab-content">
+            <img src="/static/images/nasıl_baslanır3.jpg" alt="Nasıl Başlanır 3">
+            <h2>Kursunuzu Başlatın</h2>
+            <p>Kursunuzu sosyal medya ve profesyonel ağlarınız üzerinden tanıtarak ilk puan ve yorumlarınızı alın. Kursunuz, her ücretli kayıttan gelir elde ettiğiniz platformumuzda keşfedilebilir hale gelecektir.</p>
+            <h3>Size nasıl yardımcı oluyoruz?</h3>
+            <p>İlk kursunuzun başarılı olmasını sağlamak için pazarlama ve promosyon araçları sunuyoruz. Ayrıca, eğitmen destek ekibimiz her adımda yanınızda olacaktır.</p>
+        </div>
+    </div>
+    </section>
+    </div>
+    </div>
+
+    <footer>
+        <p><a href="/home" style="color: inherit; text-decoration: none;">BrainStorm</a> &copy; 2024 </p>
+    </footer>
+
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const singleQuotes = document.querySelectorAll(".single-quote");
+            let currentIndex = 0;
+
+            function showQuote(index) {
+                singleQuotes.forEach((quote, i) => {
+                    quote.style.display = i === index ? "flex" : "none";
+                });
+            }
+
+            function nextQuote() {
+                currentIndex = (currentIndex + 1) % singleQuotes.length;
+                showQuote(currentIndex);
+            }
+
+            function prevQuote() {
+                currentIndex = (currentIndex - 1 + singleQuotes.length) % singleQuotes.length;
+                showQuote(currentIndex);
+            }
+
+            function startSlider() {
+                setInterval(nextQuote, 5000); // Change slide every 5 seconds
+            }
+
+            showQuote(currentIndex);
+            startSlider();
+
+            window.nextQuote = nextQuote;
+            window.prevQuote = prevQuote;
+        });
+    </script>
+
+</body>
+</html>
+</body>
+</html>

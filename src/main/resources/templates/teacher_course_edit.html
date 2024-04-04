@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainStorm - Profil Düzenleme</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        header {
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .profile-edit {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 0 10px 10px;
+            width: 100%;
+            max-width: 600px;
+        }
+        .profile-edit h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #4CAF50;
+            font-weight: 600;
+            text-align: center;
+        }
+        .edit-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .edit-form label {
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: 600;
+            text-align: left;
+            width: 100%;
+        }
+        .edit-form input[type="text"],
+        .edit-form input[type="number"],
+        .edit-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        .edit-form input[type="text"]:focus,
+        .edit-form input[type="number"]:focus,
+        .edit-form textarea:focus {
+            border-color: #4CAF50;
+        }
+        .edit-form button {
+            background-color: #4CAF50;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: calc(50% - 10px); /* Butonların genişliği eşit olacak şekilde ayarlanıyor */
+            max-width: 200px;
+            align-self: center;
+        }
+        .edit-form button:first-child {
+            margin-right: 10px; /* İlk butonun sağ tarafında boşluk bırakılıyor */
+        }
+        .edit-form button:hover {
+            background-color: #45a049;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .profile-edit {
+                padding: 30px;
+                width: 90%;
+            }
+        }
+        .error-message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8d7da; /* Kırmızı arkaplan rengi */
+            color: #721c24; /* Kırmızı metin rengi */
+            border: 1px solid #f5c6cb; /* Kırmızı kenarlık rengi */
+        }
+
+        /* Başarı mesajları */
+        .success-message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #d4edda; /* Yeşil arkaplan rengi */
+            color: #155724; /* Yeşil metin rengi */
+            border: 1px solid #c3e6cb; /* Yeşil kenarlık rengi */
+        }
+    </style>
+</head>
+<body>
+<header>
+    <a th:href="@{/teacher/user/{id}/mycourses(id=${id})}" style="text-decoration: none; color: inherit;">
+        <h1>BrainStorm</h1>
+    </a>
+</header>
+<div class="container">
+    <div class="profile-edit">
+        <div class="edit-form">
+            <h2>Kursu Düzenle</h2>
+            <form th:action="@{/teacher/user/{id}/course/edit/{courseId}(id=${id}, courseId=${courseId})}" method="post" onsubmit="return validateForm()">
+                <input type="hidden" id="id" name="id" th:value="${id}">
+                <input type="hidden" id="courseId" name="courseId" th:value="${courseId}">
+                <div class="form-group">
+                    <label for="course_name">Kurs Adı</label>
+                    <input type="text" id="course_name" name="course_name" placeholder="Kurs Adını Girin" th:value="${course.name}">
+                </div>
+                <div class="form-group">
+                    <label for="course_description">Kurs Açıklaması</label>
+                    <input type="text" id="course_description" name="course_description" placeholder="Kurs Açıklamasını Girin" th:value="${course.description}">
+                </div>
+                <div class="form-group">
+                    <label for="course_price">Fiyat</label>
+                    <input type="number" id="course_price" name="course_price" placeholder="Fiyatı Girin" th:value="${course.price}">
+                </div>
+                <button type="submit">Kaydet</button>
+                <button type="button" th:onclick="'window.location.href=\'/teacher/user/' + ${id} + '/course/delete/' + ${course.getId()} + '\' '">Sil</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function validateForm() {
+        var courseName = document.getElementById("course_name").value;
+        var courseDescription = document.getElementById("course_description").value;
+        var coursePrice = parseInt(document.getElementById("course_price").value);
+
+        if (courseName.trim() === "" || courseDescription.trim() === "" || isNaN(coursePrice) || coursePrice <= 0){
+            alert("Lütfen tüm alanları doldurun.");
+            return false; // Formun gönderimini durdur
+        }
+        return true; // Formu gönder
+    }
+
+
+
+
+</script>
+
+
+</body>
+</html>

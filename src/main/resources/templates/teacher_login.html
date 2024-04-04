@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap</title>
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('/static/images/teacher_brain_background.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            width: 400px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .login-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding-left: 40px; /* Sol padding artırıldı */
+        }
+
+        .login-container input::before {
+            content: '';
+            font-family: 'Font Awesome 6 Solid';
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            font-size: 18px;
+        }
+
+        #username::before {
+            content: '\f007'; /* Font Awesome ikonunun unicode değeri (user-solid) */
+        }
+
+        #password::before {
+            content: '\f023'; /* Font Awesome ikonunun unicode değeri (lock-solid) */
+        }
+
+        .login-container button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .login-container button:hover {
+            background-color: #45a049;
+        }
+
+        .signup-link {
+            color: #3498db;
+            text-decoration: none;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .signup-link:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h2>Giriş Yap</h2>
+
+    <form onsubmit="return validateForm()" action="#" th:action="@{/teacher/login}" method="post">
+        <label for="email"><i class="fa-solid fa-envelope"></i> E-mail:</label>
+        <input type="text" id="email" name="email" required>
+
+        <label for="password"><i class="fa-solid fa-lock"></i> Şifre:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Giriş Yap</button>
+
+        <p id="error-message" class="error-message" th:text="${error}"></p>
+
+        <a th:href="@{/teacher/register}" class="signup-link">Kayıt Ol</a>
+    </form>
+</div>
+
+<script th:inline="javascript">
+    function validateForm() {
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+
+        if (username === "" || password === "") {
+            document.getElementById("error-message").innerText = "Kullanıcı adı ve şifre boş bırakılamaz.";
+            return false;
+        } else {
+            document.getElementById("error-message").innerText = "";
+            return true;
+        }
+    }
+</script>
+</body>
+</html>

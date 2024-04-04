@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BrainStorm - Öğretmen Profili</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="/templates/css/custom-style.css">
+  <link rel="stylesheet" href="/templates/css/custom.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+    }
+    .navbar {
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 15px 20px;
+    }
+
+    .navbar-brand img {
+      height: 40px;
+      width: auto;
+    }
+
+    .navbar-brand span {
+      color: green;
+      font-family: 'Arial', sans-serif;
+      font-size: 24px;
+      margin-left: 10px;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .container.h2{
+      font-size: 24px;
+      font-weight: bold;
+      color: #333; /* Başlık rengi */
+      margin-bottom: 10px; /* Başlıklar arası boşluk */
+      text-transform: capitalize; /* Başlık metninin ilk harfini büyük yapar */
+      border-bottom: 2px solid #4CAF50; /* Alt çizgi */
+    }
+    .profile,
+    .course-form {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin: 0 10px 20px;
+      width: 45%;
+    }
+    .profile img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin-right: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .profile-info h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      color: #007bff;
+    }
+    .profile-info p {
+      margin: 5px 0;
+      color: #555;
+    }
+    .profile-info p i {
+      margin-right: 10px;
+    }
+    .edit-button {
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 10px;
+    }
+    .edit-button:hover {
+      background-color: #0056b3;
+    }
+    .course-form h3 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      color: #007bff;
+    }
+    .course {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .course img {
+      width: 80px;
+      height: 80px;
+      border-radius: 5px;
+      margin-right: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .course span {
+      font-weight: bold;
+      color: #555;
+    }
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .profile,
+      .course-form {
+        width: 100%;
+        margin: 0 0 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg mb-3">
+  <a th:href="@{/teacher/user/{id}(id=${id})}" class="navbar-brand">
+    <img src="/static/images/brain_logo3.jpg">
+    <span>BrainStorm</span>
+  </a>
+</nav>
+<div class="container">
+  <div class="profile">
+    <img src="/static/images/teacher_profile_pic.png" alt="Öğretmen İkonu">
+    <div class="profile-info">
+      <h2><strong><span th:text="${firstName + ' ' + lastName}"></span></strong></h2>
+      <p><i class="fas fa-envelope"></i> <strong> Mail:</strong> <span th:text="${email}"></span></p>
+      <p><i class="fas fa-lock"></i> <strong> Şifre:</strong>
+        <span th:utext="*{'*'.repeat(password.length())}"></span>
+      </p>
+      <p><i class="fas fa-graduation-cap"></i> <strong> Eğitim Seviyesi:</strong> <span th:text="${educationLevel}"></span></p>
+      <p><i class="fas fa-user-graduate"></i> <strong> Uzmanlık:</strong></p>
+      <ul>
+        <li th:each="expertise : ${expertise}">
+    <span>
+      <i class="fas fa-check-circle"></i>
+      <strong th:text="${expertise.getArea()}"></strong>
+      : <span th:text="${expertise.getYearsOfExperience()}"></span> deneyim
+    </span>
+        </li>
+      </ul>
+      <p><i class="fas fa-info"></i> <strong> Kişisel Bilgiler: </strong> <span th:text="${personalInfo}"></span></p>
+      <button class="edit-button" th:onclick="'window.location.href=\'/teacher/user/' + ${id} + '/profile/edit\' '">Profili Düzenle</button>
+    </div>
+  </div>
+  <div class="course-form">
+    <h3>Verilen Kurslar</h3>
+    <div class="course-list">
+      <div th:each="course : ${teacher_courses}" class="course">
+        <img th:src="@{/static/images/course-image2.jpg}" alt="Kurs İkonu">
+        <div class="course-details">
+          <p><strong style="color: #007bff;">Kurs Adı:</strong> <span style="color: #555;" th:text="${course.getName()}"></span></p>
+          <p><strong style="color: #007bff;">Kurs Açıklaması:</strong> <span style="color: #555;" th:text="${course.getDescription()}"></span></p>
+          <p><strong style="color: #007bff;">Fiyat:</strong> <span style="color: #555;" th:text="${course.getPrice()}"></span> TL</p>
+          <button class="edit-button" th:onclick="'window.location.href=\'/teacher/user/' + ${id} + '/course/edit/' + ${course.getId()} + '\' '">Düzenle</button>
+          <hr style="border-top: 1px solid #ccc; margin: 10px 0;">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
