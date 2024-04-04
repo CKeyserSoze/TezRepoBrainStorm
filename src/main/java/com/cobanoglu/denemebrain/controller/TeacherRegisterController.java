@@ -55,6 +55,7 @@ public class TeacherRegisterController {
 
         // Email'in veritabanında olup olmadığını kontrol et
         if (teacherService.existsByEmail(email) || userService.isUserExists(email)) {
+            var blah = expertiseService.getAllExpertises();
             model.addAttribute("error", "Bu e-posta zaten kayıtlı.");
             return "teacher_register";
         }
