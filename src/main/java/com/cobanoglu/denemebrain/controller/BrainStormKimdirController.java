@@ -10,6 +10,8 @@ public class BrainStormKimdirController {
 
     @GetMapping("/brainstorm")
     public String showBrainStormPage(){
+        System.out.println("deneme push");
+        //deneme yorum
 
         return "brainstorm_nedir";
     }
