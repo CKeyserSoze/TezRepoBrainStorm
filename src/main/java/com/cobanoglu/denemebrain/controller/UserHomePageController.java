@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -31,6 +32,25 @@ public class UserHomePageController {
         User user = userService.findById(id);
         if(user != null){
             List<Course> courses = courseService.getAllCourses();
+            model.addAttribute("courses",courses);
+            model.addAttribute("user", user);
+            return "user_homepage";
+        }
+        else{
+            return "redirect:/error";
+        }
+
+
+
+    }
+    @GetMapping("/home/{id}/{grade}/{Lesson}")
+    public String showHomePageForm(@PathVariable Long id,@PathVariable String grade,@PathVariable String Lesson, Model model){
+        User user = userService.findById(id);
+        if(user != null){
+            int grade2 = Integer.parseInt(grade);
+            List<Course> courses = courseService.getCourseByGradeAndLesson(grade,Lesson);
+
+
             model.addAttribute("courses",courses);
             model.addAttribute("user", user);
             return "user_homepage";

@@ -17,44 +17,38 @@ public class CourseServiceImpl implements CourseService{
     public CourseServiceImpl(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
-
     @Override
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
     }
-
     @Override
     public Optional<Course> getCourseById(Long id) {
         return courseRepository.findById(id);
     }
 
     @Override
+    public List<Course> getCourseByGradeAndLesson(String grade, String Lesson) {return courseRepository.findByGradeAndLesson(grade,Lesson);}
+
+    @Override
     public Course createCourse(Course course) {
         return courseRepository.save(course);
     }
-
     @Override
     public Course updateCourse(Course course) {
         return courseRepository.save(course);
     }
-
     @Override
     public void deleteCourseById(Long id) {
         courseRepository.deleteById(id);
     }
-
     @Override
     public void save(Course course) {
         courseRepository.save(course);
     }
-
     @Override
     public Course findById(Long id) {
         return courseRepository.findById(id).orElse(null);
     }
-
     @Override
-    public List<Course> findByTeacherId(Long teacherId) {
-        return courseRepository.findByTeacherId(teacherId);
-    }
+    public List<Course> findByTeacherId(Long teacherId) {return courseRepository.findByTeacherId(teacherId);}
 }
