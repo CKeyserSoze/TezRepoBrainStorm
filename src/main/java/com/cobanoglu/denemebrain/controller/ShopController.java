@@ -41,12 +41,20 @@ public class ShopController {
 
     @GetMapping("{id}/shop")
     public String showShopPage(@PathVariable("id") Long id,
-                               @RequestParam("courseId") Long courseId,
                                Model model){
         HttpSession session = request.getSession();
         String cartKey = id.toString()+"cart";
         Cart cartInSession = new Cart();
 
+        if(session.getAttribute(cartKey) == null)
+        {
+            session.setAttribute(cartKey,cartInSession);
+        }
+        else
+        {
+            cartInSession = (Cart) session.getAttribute(cartKey);
+        }
+        /*
         //Eklenecek Course'u bulma
         Course courseToAddCart = new Course();
         List<Course> courses = courseService.getAllCourses();
@@ -71,17 +79,45 @@ public class ShopController {
             cartInSession.CartCourses.add(courseToAddCart);
             session.setAttribute(cartKey,cartInSession);
         }
-
+        */
         List<Course> cart = cartInSession.CartCourses;
 
         int totalPrice = calculateTotalPrice(cart);
         model.addAttribute("totalPrice", totalPrice);
 
         model.addAttribute("courses", cart); // Tüm kursları model'e ekle
-        model.addAttribute("courseId", courseId);
         return "shop_page";
     }
+    @GetMapping("/{id}/shop/add")
+    public String AddToCart(@PathVariable("id") Long id,
+                                                      @RequestParam("courseId") Long courseId,
+                                                      Model model){
+        HttpSession session = request.getSession();
+        String cartKey = id.toString()+"cart";
+        Cart cartInSession = new Cart();
 
+        Course courseToAddCart = new Course();
+        List<Course> courses = courseService.getAllCourses();
+        for(var course : courses)
+        {
+            if(course.getId() == courseId)
+            {
+                courseToAddCart = course;
+            }
+        }
+
+        if(session.getAttribute(cartKey) == null)
+        {
+            cartInSession.CartCourses.add(courseToAddCart);
+            session.setAttribute(cartKey,cartInSession);
+        }
+        else {
+            cartInSession = (Cart) session.getAttribute(cartKey);
+            cartInSession.CartCourses.add(courseToAddCart);
+            session.setAttribute(cartKey,cartInSession);
+        }
+        return "redirect:/user/home/" + id;
+    }
     @PostMapping("/{id}/shop/remove")
     public String removeCourseFromCart(@PathVariable("id") Long id,
                                        @RequestParam("courseId") Long courseId,
@@ -100,7 +136,7 @@ public class ShopController {
         int totalPrice = calculateTotalPrice(cart);
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("courses", cart); // Tüm kursları modele ekle
-        return "redirect:/user/home/" + id + "/shop?id=" + id + "&courseId=" + 10000; // Sepet sayfasına geri yönlendir ve hem id hem de courseId parametrelerini ekle
+        return "redirect:/user/home/" + id + "/shop?id=" + id; // Sepet sayfasına geri yönlendir ve hem id hem de courseId parametrelerini ekle
 
     }
     @GetMapping("{id}/payment")

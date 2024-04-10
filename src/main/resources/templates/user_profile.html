@@ -158,19 +158,22 @@
                 <div class="course-details">
                     <h4 class="course-title"><strong>Kurs Adı:</strong> <span th:text="${course.getCourse().getName()}"></span></h4>
                     <p class="course-description"><strong>Kurs Açıklaması:</strong> <span th:text="${course.getCourse().getDescription()}"></span></p>
+                    <form th:action="@{'/user/home/' + ${id} + '/profile'}" method="post" onsubmit="return submitForm()">
                     <div class="rating-section">
-                        <div class="star-rating">
-                            <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 stars"></label>
-                            <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 stars"></label>
-                            <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars"></label>
-                            <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars"></label>
-                            <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star"></label>
-                        </div>
+                        <label for="rating"></label><select id="rating" name="rating">
+                            <option value="5">5 star</option>
+                            <option value="4">4 star</option>
+                            <option value="3">3 star</option>
+                            <option value="2">2 star</option>
+                            <option value="1">1 star</option>
+                        </select>
                     </div>
                     <div class="comment-section">
-                        <textarea class="course-comment" rows="4" cols="50"></textarea>
+                        <label for="comment"></label><textarea id="comment" name="comment" class="course-comment" rows="4" cols="50"></textarea>
                     </div>
-                    <a href="#" class="evaluate-course">Değerlendir <i class="fas fa-star"></i></a>
+                        <input type="hidden" id="courseId" name="courseId" th:value="${course.getCourse().getId()}" />
+                        <button type="submit" href="#" class="evaluate-course">Değerlendir <i class="fas fa-star"></i></button>
+                    </form>
                 </div>
             </div>
 
@@ -182,6 +185,19 @@
 <footer>
     <p><a style="color: inherit; text-decoration: none;">BrainStorm</a> &copy; 2024 </p>
 </footer>
+<script>
+    function submitForm() {
+        var commentValue = document.getElementById("comment").value.trim();
+
+        if (commentValue === "") {
+            alert("Lütfen yorumunuzu giriniz.");
+            return false; // Form gönderimini engeller
+        }
+
+        return true; // Form gönderimini devam ettirir
+    }
+</script>
 </body>
+
 
 </html>

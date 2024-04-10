@@ -1,17 +1,17 @@
 package com.cobanoglu.denemebrain.controller;
 
+import com.cobanoglu.denemebrain.entity.Comments;
 import com.cobanoglu.denemebrain.entity.Course;
 import com.cobanoglu.denemebrain.entity.TakenCourse;
 import com.cobanoglu.denemebrain.entity.User;
+import com.cobanoglu.denemebrain.service.CommentsService;
 import com.cobanoglu.denemebrain.service.CourseService;
 import com.cobanoglu.denemebrain.service.TakenCourseService;
 import com.cobanoglu.denemebrain.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +22,17 @@ public class UserProfileController {
     private UserService userService;
     private TakenCourseService takenCourseService;
     private CourseService courseService;
+    private CommentsService commentsService;
 
     @Autowired
-    public UserProfileController(UserService userService, TakenCourseService takenCourseService, CourseService courseService) {
+    public UserProfileController(UserService userService,
+                                 TakenCourseService takenCourseService,
+                                 CourseService courseService,
+                                 CommentsService commentsService) {
         this.userService = userService;
         this.takenCourseService = takenCourseService;
         this.courseService = courseService;
+        this.commentsService = commentsService;
     }
 
     @GetMapping("/{id}/profile")
@@ -73,6 +78,25 @@ public class UserProfileController {
 
         return "user_profile";
 
+    }
+    @PostMapping("/{id}/profile")
+    public String SendComments(@PathVariable Long id,
+                               @RequestParam("courseId") Long courseId,
+                               @RequestParam("rating") int rating,
+                               @RequestParam("comment") String comment,
+                               Model model){
+        Course course = courseService.findById(courseId);
+        User user = userService.getUserById(id);
+
+        Comments commentToAdd = new Comments();
+        commentToAdd.setComment(comment);
+        commentToAdd.setCourse(course);
+        commentToAdd.setUser(user);
+        commentToAdd.setRating(rating);
+
+        commentsService.createComments(commentToAdd);
+
+        return "redirect:/user/home/" + id + "/profile";
     }
 }
 

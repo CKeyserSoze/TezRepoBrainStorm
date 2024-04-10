@@ -37,9 +37,6 @@ public class UserHomePageController {
         else{
             return "redirect:/error";
         }
-
-
-
     }
     @GetMapping("/home/{id}/{grade}/{Lesson}")
     public String showHomePageForm(@PathVariable Long id,@PathVariable String grade,@PathVariable String Lesson, Model model){
