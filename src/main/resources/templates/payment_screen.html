@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('/static/images/payment_image.png');
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+        }
+
+        .message-box {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 18px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            display: none;
+            position: absolute;
+            top: -50px; /* Adjust the top position as needed */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 500px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 10px; /* Butonun üst boşluğu ekledik */
+        }
+    </style>
+    <title>Ödeme Ekranı</title>
+</head>
+<body>
+    <div class="container">
+        <div class="message-box" id="successMessage">Ders alımınız başarıyla gerçekleştirilmiştir. BrainStorm'u tercih ettiğiniz için teşekkür ederiz.</div>
+
+        <form th:action="@{/user/home/{id}/payment(id = ${id})}" method="post" id="paymentForm" >
+            <label for="cardNumber">Kart Numarası</label>
+            <input type="text" id="cardNumber" name="cardNumber" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" oninput="formatCardNumber()" required>
+
+            <label for="expiryDate">Son Kullanma Tarihi</label>
+            <input type="text" id="expiryDate" name="expiryDate" pattern="(0[1-9]|1[0-2])\/\d{2}" placeholder="MM/YY" maxlength="5" oninput="formatExpiryDate()" required>
+
+            <label for="cvc">CVC</label>
+            <input type="text" id="cvc" name="cvc" pattern="\d{3}" placeholder="XXX" maxlength="3" oninput="formatCVC()" required>
+
+            <button type="submit">Ödeme Yap</button>
+        </form>
+    </div>
+
+    <script>
+        function formatCardNumber() {
+            var input = document.getElementById('cardNumber');
+            var value = input.value.replace(/\D/g, ''); // Remove non-numeric characters
+            var formattedValue = '';
+
+            for (var i = 0; i < value.length; i += 4) {
+                formattedValue += value.substr(i, 4) + ' ';
+            }
+
+            input.value = formattedValue.trim();
+        }
+
+        function formatExpiryDate() {
+            var input = document.getElementById('expiryDate');
+            var value = input.value.replace(/\D/g, ''); // Remove non-numeric characters
+
+            if (value.length > 2) {
+                input.value = value.substr(0, 2) + '/' + value.substr(2);
+            }
+        }
+
+        function formatCVC() {
+            var input = document.getElementById('cvc');
+            var value = input.value.replace(/\D/g, ''); // Remove non-numeric characters
+            input.value = value.substr(0, 3);
+        }
+
+        /*
+        function handlePayment(event) {
+            event.preventDefault(); // Prevents the form from submitting
+
+            // Check if the card number is 16 digits
+            var cardNumberInput = document.getElementById('cardNumber');
+            var cardNumberValue = cardNumberInput.value.replace(/\D/g, ''); // Remove non-numeric characters
+
+            if (cardNumberValue.length !== 16) {
+                alert('Geçersiz kart numarası. Lütfen 16 haneli bir kart numarası girin.');
+                return;
+            }
+
+            // Check if the year is between 24 and 35
+            var expiryDateInput = document.getElementById('expiryDate');
+            var yearInput = parseInt(expiryDateInput.value.substr(3));
+
+            if (yearInput >= 24 && yearInput <= 35) {
+                // Check if CVC is 3 digits
+                var cvcInput = document.getElementById('cvc');
+                var cvcValue = cvcInput.value.replace(/\D/g, ''); // Remove non-numeric characters
+
+                if (cvcValue.length !== 3) {
+                    alert('Geçersiz CVC. Lütfen 3 haneli bir CVC girin.');
+                    return;
+                }
+
+                // Perform payment processing logic here
+
+                // Show success message
+                var successMessage = document.getElementById('successMessage');
+                successMessage.style.display = 'block';
+
+                // Redirect to user.html after a delay (e.g., 3 seconds)
+                setTimeout(function() {
+                    window.location.href = 'user.html';
+                }, 3000);
+            } else {
+                alert('Geçersiz son kullanma tarihi yılı. Lütfen kontrol edin.');
+            }
+        }*/
+    </script>
+</body>
+</html>

@@ -18,10 +18,10 @@ public class TakenCourseServiceImpl implements TakenCourseService{
     }
 
     @Override
-    public List<TakenCourse> findByUserId(Long userId) {
-        return  takenCourseRepository.findByUserId(userId);
-    }
+    public List<TakenCourse> findByUserId(Long userId) {return takenCourseRepository.findByUserId(userId);}
 
+    @Override
+    public TakenCourse SaveTakenCourse(TakenCourse takenCourse) {return takenCourseRepository.save(takenCourse);}
 
 
 }

@@ -175,10 +175,10 @@
       </li>
 
       <li class="nav-item col-8">
-        <form class="form-inline my-2 my-lg-0 inbutton">
+        <form th:action="@{'/user/home/' + ${id} + '/search'}" method="post" class="form-inline my-2 my-lg-0 inbutton">
           <input class="form-control form-control-lg mr-sm-0 col-8 bg-light border-0 "
                  style="border-radius: 5px 0px 0px 5px"
-                 type="search" placeholder="En iyi kurslarımızı arayın" aria-label="Search">
+                 type="search" id="search" name="searchedWord" placeholder="En iyi kurslarımızı arayın" aria-label="Search">
 
           <button class="btn btn-light btn-lg  my-2 my-sm-0 ml-0 col-2"
                   style="border-radius: 0px 5px 5px 0px;"

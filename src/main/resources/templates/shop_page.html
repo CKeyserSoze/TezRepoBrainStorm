@@ -92,7 +92,7 @@
 
     <div id="total-price" th:text="'Toplam Fiyat: ' + ${totalPrice} + ' TL'"></div>
 
-    <button class="btn btn-success" id="payment-button" onclick="redirectToPaymentScreen()">Ödemeye Geç</button>
+    <a th:href="@{/user/home/{id}/payment(id=${id})}" class="btn btn-success" id="payment-button">Ödemeye Geç</a>
 </div>
 
 <script th:inline="javascript">

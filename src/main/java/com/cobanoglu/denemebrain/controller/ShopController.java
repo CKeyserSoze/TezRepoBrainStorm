@@ -2,7 +2,11 @@ package com.cobanoglu.denemebrain.controller;
 
 import com.cobanoglu.denemebrain.entity.Cart;
 import com.cobanoglu.denemebrain.entity.Course;
+import com.cobanoglu.denemebrain.entity.TakenCourse;
+import com.cobanoglu.denemebrain.entity.User;
 import com.cobanoglu.denemebrain.service.CourseService;
+import com.cobanoglu.denemebrain.service.TakenCourseService;
+import com.cobanoglu.denemebrain.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +22,19 @@ import java.util.List;
 @RequestMapping("/user/home")
 public class ShopController {
 
+    private final UserService userService;
     private final CourseService courseService;
+    private final TakenCourseService takenCourseService;
     private HttpServletRequest request;
     @Autowired
-    public ShopController(HttpServletRequest request,CourseService courseService) {
+    public ShopController(HttpServletRequest request,
+                          CourseService courseService,
+                          UserService userService,
+                          TakenCourseService takenCourseService) {
         this.courseService = courseService;
         this.request = request;
+        this.takenCourseService = takenCourseService;
+        this.userService = userService;
     }
 
 
@@ -92,6 +103,43 @@ public class ShopController {
         return "redirect:/user/home/" + id + "/shop?id=" + id + "&courseId=" + 10000; // Sepet sayfasına geri yönlendir ve hem id hem de courseId parametrelerini ekle
 
     }
+    @GetMapping("{id}/payment")
+    public String Payment(@PathVariable("id") Long id,
+                                       Model model){
+
+        return "payment_screen";
+    }
+
+    @PostMapping("{id}/payment")
+    public String PaymentFinish(@PathVariable("id") Long id,
+                                @RequestParam("cardNumber") String cardNumber,
+                                @RequestParam("expiryDate") String expiryDate,
+                                @RequestParam("cvc") String cvc,
+                                Model model){
+        User user = userService.getUserById(id);
+        HttpSession session = request.getSession();
+        String CartKey = id.toString()+"cart";
+        Cart cart = (Cart) session.getAttribute(CartKey);
+
+
+        if(cardNumber.equals("4444 4444 4444 4444")
+            && expiryDate.equals("12/27")
+            && cvc.equals("444"))
+        {
+            for(var Course :cart.CartCourses)
+            {
+                TakenCourse takenCourseToAdd = new TakenCourse();
+                takenCourseToAdd.setCourse(Course);
+                takenCourseToAdd.setUser(user);
+                takenCourseService.SaveTakenCourse(takenCourseToAdd);
+            }
+            return "redirect:/user/home/" + user.getId();
+        }else
+        {
+            return "payment_screen";
+        }
+    }
+
 /*
     private boolean isCourseInCart(Course course) {
         for (Course c : cart) {

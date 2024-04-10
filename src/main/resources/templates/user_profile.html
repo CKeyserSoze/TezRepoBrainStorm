@@ -152,14 +152,29 @@
         <div class="course-list">
             <!-- Her bir kurs için döngü -->
             <div th:each="course : ${takenCourses}" class="course">
-                <img th:src="@{/static/images/course-image2.jpg}" alt="Kurs İkonu">
+                <div class="course-thumbnail">
+                    <img th:src="@{/static/images/course-image2.jpg}" alt="Kurs İkonu">
+                </div>
                 <div class="course-details">
-                    <h4><strong style="color: #007bff;">Kurs Adı:</strong> <span style="color: #555;" th:text="${course.getCourse().getName()}"></span></h4>
-                    <p><strong style="color: #007bff;">Kurs Açıklaması:</strong> <span style="color: #555;" th:text="${course.getCourse().getDescription()}"></span></p>
-                    <a href="#" class="evaluate-course"><i class="fas fa-star"></i> Değerlendir</a>
-                    <hr>
+                    <h4 class="course-title"><strong>Kurs Adı:</strong> <span th:text="${course.getCourse().getName()}"></span></h4>
+                    <p class="course-description"><strong>Kurs Açıklaması:</strong> <span th:text="${course.getCourse().getDescription()}"></span></p>
+                    <div class="rating-section">
+                        <div class="star-rating">
+                            <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 stars"></label>
+                            <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 stars"></label>
+                            <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars"></label>
+                            <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars"></label>
+                            <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star"></label>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <textarea class="course-comment" rows="4" cols="50"></textarea>
+                    </div>
+                    <a href="#" class="evaluate-course">Değerlendir <i class="fas fa-star"></i></a>
                 </div>
             </div>
+
+
         </div>
     </div>
 </div>
