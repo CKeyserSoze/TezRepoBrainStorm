@@ -1,9 +1,6 @@
 package com.cobanoglu.denemebrain.controller;
 
-import com.cobanoglu.denemebrain.entity.Comments;
-import com.cobanoglu.denemebrain.entity.Course;
-import com.cobanoglu.denemebrain.entity.TakenCourse;
-import com.cobanoglu.denemebrain.entity.User;
+import com.cobanoglu.denemebrain.entity.*;
 import com.cobanoglu.denemebrain.service.CommentsService;
 import com.cobanoglu.denemebrain.service.CourseService;
 import com.cobanoglu.denemebrain.service.TakenCourseService;
@@ -38,41 +35,57 @@ public class UserProfileController {
     @GetMapping("/{id}/profile")
     public String showUserProfilePage(@PathVariable Long id, Model model) {
         User user = userService.findById(id);
-        List<TakenCourse> takenCourses = takenCourseService.findByUserId(id);
-
-
         if (user == null) {
             return "error";
         }
+        //Kurs daha önce user tarafından puanlandı mı kontrol etmek için yorumları vealınan kursları getirdim.
+        //Eğer alınan kursun user_id'si ve course_id'si comments tablosunda varsa daha önce değerlendirmiştir.
+        //Değerlendirilen ve değerlendirilmemiş iki farklı listeyle modele yollanacak.
+        ArrayList<Course> notRatedCourses = new ArrayList<Course>();
+        ArrayList<Course> ratedCourses = new ArrayList<Course>();
+        ArrayList<Comments> commentsOfLesson = new ArrayList<>();
+        ArrayList<CourseCommentModel> courseComments = new ArrayList<>();
 
-        List<String> courseNames = new ArrayList<>();
-        List<String> courseDescriptions = new ArrayList<>();
+        List<TakenCourse> takenCourses = takenCourseService.findByUserId(id);
+        List<Comments> comments = commentsService.getAllComments();
 
-        // Her bir alınan kurs için ilgili kursun adı ve açıklamasını al
-        // Eğer alınan kurslar varsa
-        if (!takenCourses.isEmpty()) {
-            // Kurs adları ve açıklamalarını saklamak için liste oluştur
-
-
-            // Her bir alınan kurs için işlem yap
-            for (TakenCourse takenCourse : takenCourses) {
-                // Verilen takenCourse'un course nesnesini al
-                Course course = takenCourse.getCourse();
-                if (course != null) {
-                    // Kurs adını ve açıklamasını listelere ekle
-                    courseNames.add(course.getName());
-                    courseDescriptions.add(course.getDescription());
+        for(var course : takenCourses)
+        {
+            boolean flag = false;
+            Comments commentToList = new Comments();
+            for(var comment : comments)
+            {
+                if (comment.getUser().getId().equals(course.getUser().getId())
+                        && comment.getCourse().getId().equals(course.getCourse().getId())) {
+                    flag = true;
+                    commentToList=comment;
+                    commentsOfLesson.add(comment);
+                    break;
                 }
             }
-
+            if(flag)
+            {
+                ratedCourses.add(course.getCourse());
+                CourseCommentModel courseComment = new CourseCommentModel();
+                courseComment.setCourse(course.getCourse());
+                courseComment.setComment(commentToList);
+                courseComments.add(courseComment);
+            }
+            else
+            {
+                notRatedCourses.add(course.getCourse());
+            }
         }
+
+
+
         model.addAttribute("firstName", user.getUsername());
         model.addAttribute("lastName", user.getSurname());
         model.addAttribute("email", user.getEmail());
         model.addAttribute("password", user.getPassword());
         model.addAttribute("personalInfo", user.getInformation());
-        model.addAttribute("takenCourses", takenCourses);
-
+        model.addAttribute("notRatedCourses", notRatedCourses);
+        model.addAttribute("ratedCourses",courseComments);
 
 
 

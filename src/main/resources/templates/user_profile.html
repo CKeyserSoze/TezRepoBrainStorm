@@ -208,13 +208,13 @@
         <h3>Alınan Kurslar</h3>
         <div class="course-list">
             <!-- Her bir kurs için döngü -->
-            <div th:each="course : ${takenCourses}" class="course">
+            <div th:each="course : ${notRatedCourses}" class="course">
                 <div class="course-thumbnail">
                     <img th:src="@{/static/images/course-image2.jpg}" alt="Kurs İkonu">
                 </div>
                 <div class="course-details">
-                    <h4 class="course-title"><strong>Kurs Adı:</strong> <span th:text="${course.getCourse().getName()}"></span></h4>
-                    <p class="course-description"><strong>Kurs Açıklaması:</strong> <span th:text="${course.getCourse().getDescription()}"></span></p>
+                    <h4 class="course-title"><strong>Kurs Adı:</strong> <span th:text="${course.getName()}"></span></h4>
+                    <p class="course-description"><strong>Kurs Açıklaması:</strong> <span th:text="${course.getDescription()}"></span></p>
                     <form th:action="@{'/user/home/' + ${id} + '/profile'}" method="post" onsubmit="submitForm(event)" class="course-rating-form">
 
                         <div class="rating-section">
@@ -231,15 +231,26 @@
                             <label for="comment" class="comment-label">Yorumunuz:</label>
                             <textarea id="comment" name="comment" class="course-comment" rows="4" cols="50"></textarea>
                         </div>
-                        <input type="hidden" id="courseId" name="courseId" th:value="${course.getCourse().getId()}" />
+                        <input type="hidden" id="courseId" name="courseId" th:value="${course.getId()}" />
                         <button type="submit" href="#" class="evaluate-course-btn">Değerlendir <i class="fas fa-star"></i></button>
 
                     </form>
                 </div>
             </div>
+
+            <h3>Değerlendirilmiş Alınan Kurslar</h3>
+            <div th:each="coursecomment: ${ratedCourses}"  class="course">
+                <div class="course-thumbnail">
+                    <img th:src="@{/static/images/course-image2.jpg}" alt="Kurs İkonu">
+                </div>
+                <div class="course-details">
+                    <h4 class="course-title"><strong>Kurs Adı:</strong> <span th:text="${coursecomment.getCourse().getName()}"></span></h4>
+                    <p class="course-description"><strong>Kurs Açıklaması:</strong> <span th:text="${coursecomment.getCourse().getDescription()}"></span></p>
+                    <p class="course-description"><strong>Yapılan Yorum:</strong> <span th:text="${coursecomment.getComment().getComment()}"></span></p>
+                </div>
+            </div>
+
         </div>
-
-
     </div>
 </div>
 
