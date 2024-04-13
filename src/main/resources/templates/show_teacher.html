@@ -159,7 +159,7 @@
                     <p><strong style="color: #007bff;">Kurs Adı:</strong> <span style="color: #555;" th:text="${course.getName()}"></span></p>
                     <p><strong style="color: #007bff;">Kurs Açıklaması:</strong> <span style="color: #555;" th:text="${course.getDescription()}"></span></p>
                     <p><strong style="color: #007bff;">Fiyat:</strong> <span style="color: #555;" th:text="${course.getPrice()}"></span> TL</p>
-                    <a href="#" class="btn btn-link"><i class="fas fa-cart-plus"></i> Sepete Ekle</a>
+                    <a th:href="@{'/user/home/' + ${id} + '/shop/add/{teacherId}'(id=${id},teacherId=${teacherId} ,courseId=${course.getId()})}" class="btn btn-link"><i class="fas fa-cart-plus"></i> Sepete Ekle</a>
                     <hr style="border-top: 1px solid #ccc; margin: 10px 0;">
                 </div>
             </div>

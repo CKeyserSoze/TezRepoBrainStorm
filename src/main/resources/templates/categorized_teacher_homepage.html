@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="/templates/css/custom.css" >
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <link rel="stylesheet" href="/templates/css/custom-style.css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-AerWhvrZ8oT0Hl2I/+hx8a9/+F8gkCQeZJB78kh+Vf6EznR6LkEaLfJp+53DIZjr" crossorigin="anonymous">
+
 
     <title>BrainStorm'a Hoşgeldin!</title>
     <style>
@@ -94,7 +96,7 @@
 
 
 <nav class="navbar navbar-expand-lg navbar-light bg-white">
-    <a th:href="@{/user/home/{id}(id=${id})}" class="navbar-brand mb-3">
+    <a th:href="@{/teacher/user/{id}(id=${id})}" class="navbar-brand mb-3">
         <img src="/static/images/brain_logo3.jpg" width="100px">
         <span style="color: green; font-family: 'Arial', sans-serif; font-size: 24px; margin-left: 10px;">BrainStorm</span>
     </a>
@@ -113,69 +115,70 @@
                     <a class="dropdown-item" href="#" onmouseover="showSubcategories('subcategoriesAction')">9. Sınıf  </a>
                     <div class="dropdown-menu subcategories" id="subcategoriesAction" aria-labelledby="navbarDropdown" style="position: absolute; top: 0; left: 100%;">
                         <!-- 9. Sınıf dropdown items -->
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/9' + '/matematik'}">Matematik</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/9' + '/fizik'}">Fizik</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/9' + '/kimya'}">Kimya</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/9' + '/biyoloji'}">Biyoloji</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/9' + '/türk dili ve edebiyatı'}">Türk Dili ve Edebiyatı</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/9' + '/coğrafya'}">Coğrafya</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/9' + '/tarih'}">Tarih</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/9' + '/ingilizce'}">İngilizce</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/9' + '/felsefe'}">Felsefe</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/9' + '/almanca'}">Almanca</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/9' + '/resim'}">Resim</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/matematik'}">Matematik</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/fizik'}">Fizik</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + 'kimya'}">Kimya</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/biyoloji'}">Biyoloji</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/türk dili ve edebiyatı'}">Türk Dili ve Edebiyatı</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/coğrafya'}">Coğrafya</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/tarih'}">Tarih</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/ingilizce'}">İngilizce</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/felsefe'}">Felsefe</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/almanca'}">Almanca</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/resim'}">Resim</a>
                     </div>
                     <a class="dropdown-item" href="#" onmouseover="showSubcategories('subcategoriesAnotherAction')">10. Sınıf</a>
                     <div class="dropdown-menu subcategories" id="subcategoriesAnotherAction" aria-labelledby="navbarDropdown" style="position: absolute; top: 0; left: 100%;">
                         <!-- 10. Sınıf dropdown items -->
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/10' + '/matematik'}">Matematik</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/10' + '/fizik'}">Fizik</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/10' + '/kimya'}">Kimya</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/10' + '/biyoloji'}">Biyoloji</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/10' + '/türk dili ve edebiyatı'}">Türk Dili ve Edebiyatı</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/10' + '/coğrafya'}">Coğrafya</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/10' + '/tarih'}">Tarih</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/10' + '/ingilizce'}">İngilizce</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/10' + '/felsefe'}">Felsefe</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/10' + '/almanca'}">Almanca</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/10' + '/resim'}">Resim</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/matematik'}">Matematik</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/fizik'}">Fizik</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + 'kimya'}">Kimya</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/biyoloji'}">Biyoloji</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/türk dili ve edebiyatı'}">Türk Dili ve Edebiyatı</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/coğrafya'}">Coğrafya</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/tarih'}">Tarih</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/ingilizce'}">İngilizce</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/felsefe'}">Felsefe</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/almanca'}">Almanca</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/resim'}">Resim</a>
                     </div>
                     <a class="dropdown-item" href="#" onmouseover="showSubcategories('subcategoriesAnotherAction2')">11. Sınıf</a>
                     <div class="dropdown-menu subcategories" id="subcategoriesAnotherAction2" aria-labelledby="navbarDropdown" style="position: absolute; top: 0; left: 100%;">
                         <!-- 11. Sınıf dropdown items -->
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/11' + '/matematik'}">Matematik</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/11' + '/fizik'}">Fizik</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/11' + '/kimya'}">Kimya</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/11' + '/biyoloji'}">Biyoloji</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/11' + '/türk dili ve edebiyatı'}">Türk Dili ve Edebiyatı</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/11' + '/coğrafya'}">Coğrafya</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/11' + '/tarih'}">Tarih</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/11' + '/ingilizce'}">İngilizce</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/11' + '/felsefe'}">Felsefe</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/11' + '/almanca'}">Almanca</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/11' + '/resim'}">Resim</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/matematik'}">Matematik</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/fizik'}">Fizik</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + 'kimya'}">Kimya</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/biyoloji'}">Biyoloji</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/türk dili ve edebiyatı'}">Türk Dili ve Edebiyatı</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/coğrafya'}">Coğrafya</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/tarih'}">Tarih</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/ingilizce'}">İngilizce</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/felsefe'}">Felsefe</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/almanca'}">Almanca</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/resim'}">Resim</a>
                     </div>
                     <a class="dropdown-item" href="#" onmouseover="showSubcategories('subcategoriesAnotherAction3')">12. Sınıf</a>
                     <div class="dropdown-menu subcategories" id="subcategoriesAnotherAction3" aria-labelledby="navbarDropdown" style="position: absolute; top: 0; left: 100%;">
                         <!-- 12. Sınıf dropdown items -->
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/12' + '/matematik'}">Matematik</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/12' + '/fizik'}">Fizik</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/12' + '/kimya'}">Kimya</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/12' + '/biyoloji'}">Biyoloji</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/12' + '/türk dili ve edebiyatı'}">Türk Dili ve Edebiyatı</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/12' + '/coğrafya'}">Coğrafya</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/12' + '/tarih'}">Tarih</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/12' + '/ingilizce'}">İngilizce</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/12' + '/felsefe'}">Felsefe</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/12' + '/almanca'}">Almanca</a>
-                        <a class="dropdown-item" th:href="@{'/user/home/' + ${id} + '/12' + '/resim'}">Resim</a>
-
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/matematik'}">Matematik</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/fizik'}">Fizik</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + 'kimya'}">Kimya</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/biyoloji'}">Biyoloji</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/türk dili ve edebiyatı'}">Türk Dili ve Edebiyatı</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/coğrafya'}">Coğrafya</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/tarih'}">Tarih</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/ingilizce'}">İngilizce</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/felsefe'}">Felsefe</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/almanca'}">Almanca</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/resim'}">Resim</a>
                     </div>
                 </div>
             </li>
 
             <li class="nav-item col-8">
-                <form th:action="@{'/user/home/' + ${id} + '/search'}" method="post" class="form-inline my-2 my-lg-0 inbutton">
+
+                <form th:action="@{'/teacher/user/' + ${id} + '/search'}" method="post" class="form-inline my-2 my-lg-0 inbutton">
+                    <input type="hidden" name="teacher_id" value="${id}">
                     <input class="form-control form-control-lg mr-sm-0 col-8 bg-light border-0 "
                            style="border-radius: 5px 0px 0px 5px"
                            type="search" id="search" name="searchedWord" placeholder="En iyi kurslarımızı arayın" aria-label="Search">
@@ -187,11 +190,13 @@
             </li>
         </ul>
 
-        <a class="nav-link btn btn-light mx-2 rounded" th:href="@{'/user/home/' + ${id} + '/shop'}"><i class="fas fa-shopping-cart"></i> Sepetim </a>
-        <a class="nav-link btn btn-light rounded" th:href="@{'/user/home/' + ${id} + '/profile'}"><i class="fas fa-user"></i> Profilim </a>
+        <a class="nav-link btn btn-light rounded" th:href="@{'/teacher/user/' + ${id} + '/mycourses'}"><i class="fas fa-book"></i> Kurslarım </a>
+        <a class="nav-link btn btn-light rounded" th:href="@{'/teacher/user/' + ${id} + '/addcourse'}"><i class="fas fa-plus"></i> Kurs Ekle </a>
+        <a class="nav-link btn btn-light rounded" th:href="@{'/teacher/user/' + ${id} + '/profile'}"></i> Profilim </a>
         <a class="nav-link btn btn-light rounded" href="/home"><i class="fas fa-sign-out-alt"></i> Çıkış </a>
 
     </div>
+
 </nav>
 
 
@@ -199,7 +204,6 @@
 
 
 <div class="jumbotron big-banner mb-0 jumbotron-fluid" style="height: 500px; padding-top: 150px;">
-
 </div>
 
 
@@ -257,7 +261,6 @@
     <a href="#" class="btn btn-light shadow mx-1">Tarih</a>
     <a href="#" class="btn btn-light shadow mx-1">İngilizce</a>
 </div>
-
 <div class="container mt-5">
     <h3>
         <small class="text-muted">Tüm Kurslar</small>
@@ -271,11 +274,7 @@
                         <div class="card mx-1">
                             <img class="card-img-top h-50" src="/static/images/course-image2.jpg" alt="Card image cap">
                             <div class="card-body px-2">
-                                <h6>
-                                    <a th:href="@{'/user/home/' + ${id} + '/course/' + ${course.getId()}}">
-                                        <span th:text="${course.getName()}">Kurs Adı</span>
-                                    </a>
-                                </h6>
+                                <h6 th:text="${course.getName()}">Kurs Adı</h6>
                                 <p class="card-text" style="font-size: 11px;" th:text="${course.getDescription()}">Kurs Açıklaması</p>
                                 <p class="card-text">
                                     <small class="text-muted">
@@ -284,25 +283,21 @@
                                     </small>
                                     <span class="d-block"></span>
                                     <span class="float-right">
-                                       <p class="card-text" style="font-size: 11px;">
+                                        <p class="card-text" style="font-size: 11px;">
                                             <span style="color: #6c757d;">&#8378;</span> <!-- Turkish Lira sign -->
                                             <span class="ml-1 text-muted">
                                             <span th:text="${course.getPrice()}"></span> TL
                                             </span>
-                                       </p>
-                                     <a th:href="@{'/user/home/' + ${id} + '/shop/add'(id=${id}, courseId=${course.getId()})}" class="btn btn-link"><i class="fas fa-cart-plus"></i> Sepete Ekle</a>
-
+                                        </p>
                                     </span>
                                 </p>
 
                                 <p class="card-text" style="font-size: 11px;">
                                     <i class="fas fa-user" style="color: #6c757d;"></i>
                                     <span class="ml-1 text-muted">
-                 <a th:href="@{'/user/home/' + ${id} + '/teacher/' + ${course.getTeacher().getId()}}">
-                  <span th:text="${course.getTeacher().getName()}"></span>
-                  <span th:text="${course.getTeacher().getSurname()}"></span>
-            </a>
-            </span>
+                                        <span th:text="${course.getTeacher().getName()}"></span>
+                                            <span th:text="${course.getTeacher().getSurname()}"></span>
+                                        </span>
                                 </p>
                             </div>
                         </div>
@@ -315,11 +310,19 @@
 </div>
 
 <hr>
-
-
+<hr>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <img src="/static/images/atatürk.jpg" style="height: 250px; display: block; margin: 0 auto;" class="img-fluid rounded" alt="Atatürk">
+            <p class="mt-3">"Öğretmenler! Cumhuriyet sizden 'fikri hür, vicdanı hür, irfanı hür' nesiller ister."</p>
+        </div>
+    </div>
+</div>
+<hr>
 
 <footer>
-    <p><a style="color: inherit; text-decoration: none;">BrainStorm</a> &copy; 2024 </p>
+    <p>BrainStorm &copy; 2024 </p>
 </footer>
 
 

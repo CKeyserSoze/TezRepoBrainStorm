@@ -39,10 +39,12 @@ public class UserHomePageController {
         }
     }
     @GetMapping("/home/{id}/{grade}/{Lesson}")
-    public String showHomePageForm(@PathVariable Long id,@PathVariable String grade,@PathVariable String Lesson, Model model){
+    public String showHomePageForm(@PathVariable Long id,
+                                   @PathVariable String grade,
+                                   @PathVariable String Lesson,
+                                   Model model){
         User user = userService.findById(id);
         if(user != null){
-            int grade2 = Integer.parseInt(grade);
             List<Course> courses = courseService.getCourseByGradeAndLesson(grade,Lesson);
 
 

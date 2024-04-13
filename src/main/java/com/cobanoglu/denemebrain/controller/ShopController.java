@@ -90,8 +90,40 @@ public class ShopController {
     }
     @GetMapping("/{id}/shop/add")
     public String AddToCart(@PathVariable("id") Long id,
-                                                      @RequestParam("courseId") Long courseId,
-                                                      Model model){
+                            @RequestParam("courseId") Long courseId,
+                            Model model){
+        HttpSession session = request.getSession();
+        String cartKey = id.toString()+"cart";
+        Cart cartInSession = new Cart();
+
+        Course courseToAddCart = new Course();
+        List<Course> courses = courseService.getAllCourses();
+        for(var course : courses)
+        {
+            //Long temp = course.getId();
+            if(course.getId().equals(courseId))
+            {
+                courseToAddCart = course;
+            }
+        }
+
+        if(session.getAttribute(cartKey) == null)
+        {
+            cartInSession.CartCourses.add(courseToAddCart);
+            session.setAttribute(cartKey,cartInSession);
+        }
+        else {
+            cartInSession = (Cart) session.getAttribute(cartKey);
+            cartInSession.CartCourses.add(courseToAddCart);
+            session.setAttribute(cartKey,cartInSession);
+        }
+        return "redirect:/user/home/" + id;
+    }
+    @GetMapping("/{id}/shop/add/{teacherId}")
+    public String AddToCartFromTeacherPage(@PathVariable("id") Long id,
+                                           @PathVariable("teacherId") Long teacherId,
+                                           @RequestParam("courseId") Long courseId,
+                                           Model model){
         HttpSession session = request.getSession();
         String cartKey = id.toString()+"cart";
         Cart cartInSession = new Cart();
@@ -116,7 +148,7 @@ public class ShopController {
             cartInSession.CartCourses.add(courseToAddCart);
             session.setAttribute(cartKey,cartInSession);
         }
-        return "redirect:/user/home/" + id;
+        return "redirect:/user/home/" + id + "/teacher/" + teacherId;
     }
     @PostMapping("/{id}/shop/remove")
     public String removeCourseFromCart(@PathVariable("id") Long id,
