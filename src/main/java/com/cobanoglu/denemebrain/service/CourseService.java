@@ -9,6 +9,7 @@ public interface CourseService {
     List<Course> getAllCourses();
     Optional<Course> getCourseById(Long id);
     List<Course> getCourseByGradeAndLesson(String grade, String Lesson);
+    List<Course> getCourseByLesson(String Lesson);
     Course createCourse(Course course);
     Course updateCourse(Course course);
     void deleteCourseById(Long id);

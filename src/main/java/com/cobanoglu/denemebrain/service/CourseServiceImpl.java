@@ -30,6 +30,9 @@ public class CourseServiceImpl implements CourseService{
     public List<Course> getCourseByGradeAndLesson(String grade, String Lesson) {return courseRepository.findByGradeAndLesson(grade,Lesson);}
 
     @Override
+    public List<Course> getCourseByLesson(String Lesson) {return courseRepository.findByLesson(Lesson);}
+
+    @Override
     public Course createCourse(Course course) {
         return courseRepository.save(course);
     }

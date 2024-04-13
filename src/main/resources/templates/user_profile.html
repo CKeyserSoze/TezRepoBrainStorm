@@ -97,31 +97,88 @@
             color: #007bff;
         }
 
+        .course-list {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
         .course {
             display: flex;
-            align-items: center;
-            margin-bottom: 10px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .course-thumbnail {
+            flex: 0 0 150px; /* Sabit genişlik */
+            margin-right: 20px;
         }
 
         .course img {
-            width: 80px;
-            height: 80px;
+            width: 100%;
+            height: auto;
             border-radius: 5px;
-            margin-right: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .course span {
-            font-weight: bold;
+        .course-details {
+            flex: 1;
+        }
+
+        .course-title {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .course-description {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .rating-section,
+        .comment-section {
+            margin-bottom: 15px;
+        }
+
+        .rating-label,
+        .comment-label {
+            margin-bottom: 5px;
             color: #555;
         }
 
-        footer {
-            position: fixed;
-            bottom: 0;
+        .rating-select {
+            width: 150px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .course-comment {
             width: 100%;
-            background-color: green;
-            color: #ffffff;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+        }
+
+        .evaluate-course-btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .evaluate-course-btn:hover {
+            background-color: #0056b3;
+        }
+
+
+        footer {
+            background-color: green; /* Footer arka plan rengi */
+            color: #ffffff; /* Footer metin rengi */
             padding: 10px 0;
             text-align: center;
         }
@@ -158,44 +215,59 @@
                 <div class="course-details">
                     <h4 class="course-title"><strong>Kurs Adı:</strong> <span th:text="${course.getCourse().getName()}"></span></h4>
                     <p class="course-description"><strong>Kurs Açıklaması:</strong> <span th:text="${course.getCourse().getDescription()}"></span></p>
-                    <form th:action="@{'/user/home/' + ${id} + '/profile'}" method="post" onsubmit="return submitForm()">
-                    <div class="rating-section">
-                        <label for="rating"></label><select id="rating" name="rating">
-                            <option value="5">5 star</option>
-                            <option value="4">4 star</option>
-                            <option value="3">3 star</option>
-                            <option value="2">2 star</option>
-                            <option value="1">1 star</option>
-                        </select>
-                    </div>
-                    <div class="comment-section">
-                        <label for="comment"></label><textarea id="comment" name="comment" class="course-comment" rows="4" cols="50"></textarea>
-                    </div>
+                    <form th:action="@{'/user/home/' + ${id} + '/profile'}" method="post" onsubmit="submitForm(event)" class="course-rating-form">
+
+                        <div class="rating-section">
+                            <label for="rating" class="rating-label">Kurs Puanı:</label>
+                            <select id="rating" name="rating" class="rating-select">
+                                <option value="5">★★★★★</option>
+                                <option value="4">★★★★</option>
+                                <option value="3">★★★</option>
+                                <option value="2">★★</option>
+                                <option value="1">★</option>
+                            </select>
+                        </div>
+                        <div class="comment-section">
+                            <label for="comment" class="comment-label">Yorumunuz:</label>
+                            <textarea id="comment" name="comment" class="course-comment" rows="4" cols="50"></textarea>
+                        </div>
                         <input type="hidden" id="courseId" name="courseId" th:value="${course.getCourse().getId()}" />
-                        <button type="submit" href="#" class="evaluate-course">Değerlendir <i class="fas fa-star"></i></button>
+                        <button type="submit" href="#" class="evaluate-course-btn">Değerlendir <i class="fas fa-star"></i></button>
+
                     </form>
                 </div>
             </div>
-
-
         </div>
+
+
     </div>
 </div>
+
 
 <footer>
     <p><a style="color: inherit; text-decoration: none;">BrainStorm</a> &copy; 2024 </p>
 </footer>
 <script>
-    function submitForm() {
-        var commentValue = document.getElementById("comment").value.trim();
+    function submitForm(event) {
+        // Varsayılan form gönderimini engelle
+        event.preventDefault();
 
+        // Belirli kurs için yorum değerini al
+        var commentValue = event.target.querySelector('.course-comment').value.trim();
+
+        // Yorumun boş olup olmadığını kontrol et
         if (commentValue === "") {
             alert("Lütfen yorumunuzu giriniz.");
-            return false; // Form gönderimini engeller
+            return; // Form gönderimini yapmadan fonksiyondan çık
         }
 
-        return true; // Form gönderimini devam ettirir
+        // Eğer yorum boş değilse, form gönderimini yapabilirsin
+        // Burada AJAX aracılığıyla formu gönderebilir veya başka bir işlem yapabilirsin
+
+        // Örneğin, formu programatik olarak gönderebilirsin
+        event.target.submit();
     }
+
 </script>
 </body>
 

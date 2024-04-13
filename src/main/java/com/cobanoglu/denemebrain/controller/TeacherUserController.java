@@ -40,6 +40,17 @@ public class TeacherUserController {
             return "redirect:/error";
         }
     }
+    @GetMapping("/user/{id}/{lesson}")
+    public String showCategorizedPageWithLesson(@PathVariable Long id,
+                                                @PathVariable String lesson,
+                                                Model model){
+        Teacher teacher = teacherService.findById(id);
+        List<Course> courses = courseService.getCourseByLesson(lesson);
+
+        model.addAttribute("courses",courses);
+        model.addAttribute("teacher", teacher);
+        return "categorized_teacher_homepage";
+    }
     @GetMapping("/user/{id}/{grade}/{lesson}")
     public String showCategorizedPage(@PathVariable Long id,
                                       @PathVariable String grade,

@@ -29,10 +29,18 @@ public class IndexController {
 
         return "index";
     }
+    @GetMapping("/home/{lesson}")
+    public String CategorizedIndexPageByLesson( @PathVariable String lesson,
+                                                Model model ){
+        List<Course> courses = courseService.getCourseByLesson(lesson);
+        model.addAttribute("courses",courses);
+
+        return "categorized_index";
+    }
     @GetMapping("/home/{grade}/{lesson}")
-    public String CategorizedIndexPage(@PathVariable String grade,
-                                       @PathVariable String lesson,
-                                       Model model ){
+    public String CategorizedIndexPageByGradeAndLesson( @PathVariable String grade,
+                                                        @PathVariable String lesson,
+                                                        Model model ){
         List<Course> courses = courseService.getCourseByGradeAndLesson(grade,lesson);
         model.addAttribute("courses",courses);
 

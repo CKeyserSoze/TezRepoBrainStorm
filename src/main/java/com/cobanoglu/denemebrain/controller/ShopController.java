@@ -200,7 +200,9 @@ public class ShopController {
                 takenCourseToAdd.setCourse(Course);
                 takenCourseToAdd.setUser(user);
                 takenCourseService.SaveTakenCourse(takenCourseToAdd);
+
             }
+            session.setAttribute(CartKey,null);
             return "redirect:/user/home/" + user.getId();
         }else
         {
