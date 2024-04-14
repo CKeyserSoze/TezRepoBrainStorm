@@ -16,4 +16,5 @@ public interface CourseService {
     void save(Course course);
     Course findById(Long id);
     List<Course> findByTeacherId(Long teacherId);
+    List<Course> getCoursesFilteredBy(String filter);
 }

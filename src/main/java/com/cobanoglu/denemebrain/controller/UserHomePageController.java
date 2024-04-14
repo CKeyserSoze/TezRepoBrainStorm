@@ -38,6 +38,19 @@ public class UserHomePageController {
             return "redirect:/error";
         }
     }
+    @GetMapping("/home/{id}/filter/{filter}")
+    public String filter(@PathVariable Long id, @PathVariable String filter, Model model){
+
+        User user = userService.findById(id);
+        List<Course> filteredCourses = courseService.getCoursesFilteredBy(filter);
+        // Model üzerinden görünüme ilet
+        model.addAttribute("user", user);
+        model.addAttribute("courses", filteredCourses);
+        model.addAttribute("filter", filter);
+
+        return "categorized_user_homepage";
+
+    }
     @GetMapping("/home/{id}/{Lesson}")
     public String showHomePageWithLesson(@PathVariable Long id,
                                          @PathVariable String Lesson,

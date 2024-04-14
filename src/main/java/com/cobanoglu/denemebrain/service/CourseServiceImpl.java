@@ -54,4 +54,20 @@ public class CourseServiceImpl implements CourseService{
     }
     @Override
     public List<Course> findByTeacherId(Long teacherId) {return courseRepository.findByTeacherId(teacherId);}
+
+    @Override
+    public List<Course> getCoursesFilteredBy(String filter) {
+        if ("rating_asc".equals(filter)) {
+            return courseRepository.findByOrderByRatingAsc();
+        } else if ("rating_desc".equals(filter)) {
+            return courseRepository.findByOrderByRatingDesc();
+        } else if ("price_asc".equals(filter)) {
+            return courseRepository.findByOrderByPriceAsc();
+        } else if ("price_desc".equals(filter)) {
+            return courseRepository.findByOrderByPriceDesc();
+        } else {
+            // Filtreleme için uygun bir seçenek yoksa, tüm kursları döndür
+            return courseRepository.findAll();
+        }
+    }
 }
