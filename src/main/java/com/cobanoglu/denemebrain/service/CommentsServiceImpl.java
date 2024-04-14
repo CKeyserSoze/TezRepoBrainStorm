@@ -29,6 +29,9 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     @Override
+    public List<Comments> getCommentsByCourseId(Long courseId) {return commentsRepository.findByCourseId(courseId);}
+
+    @Override
     public Comments createComments(Comments comments) {
         return commentsRepository.save(comments);
     }

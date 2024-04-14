@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/user/home")
@@ -100,6 +101,26 @@ public class UserProfileController {
                                Model model){
         Course course = courseService.findById(courseId);
         User user = userService.getUserById(id);
+        List<Comments> comments = commentsService.getAllComments();
+        int toplam = rating;
+        int commentSayisi = 1;
+        for(var commentFromServ : comments)
+        {
+            if(commentFromServ.getCourse().getId().equals(courseId))
+            {
+                commentSayisi++;
+                toplam +=commentFromServ.getRating();
+            }
+        }
+
+        float kursunPuani = (float) toplam/commentSayisi;
+
+        Optional<Course> courseFrom = courseService.getCourseById(courseId);
+        if(courseFrom.isPresent())
+        {
+            courseFrom.get().setRating(kursunPuani);
+            courseService.updateCourse(courseFrom.get());
+        }
 
         Comments commentToAdd = new Comments();
         commentToAdd.setComment(comment);

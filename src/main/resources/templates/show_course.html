@@ -84,6 +84,43 @@
             color: #007bff;
             font-size: 24px;
         }
+
+        /* Yorumlar bölümü stil */
+        .comment-container {
+            margin-top: 20px;
+        }
+
+        .comment {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .comment-content p {
+            margin-bottom: 10px;
+        }
+
+        .comment-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .comment-rating {
+            font-size: 18px;
+        }
+
+        .comment-author {
+            font-size: 16px;
+            color: #6c757d;
+        }
+
+        .comment-author i {
+            margin-right: 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -101,6 +138,10 @@
         <div class="course-details">
             <h6 class="course-name" th:text="${course.getName()}"></h6>
             <p class="course-description" th:text="${course.getDescription()}"></p>
+            <p class="course-rating">
+                <i class="fas fa-star text-warning"></i>
+                <span th:text="${course.getRating()}"></span>
+            </p>
             <p class="course-price" th:text="'Fiyat: ' + ${course.getPrice()} + ' TL'"></p>
             <p class="teacher">
                 <a th:href="@{'/user/home/' + ${id} + '/teacher/' + ${course.getTeacher().getId()}}">
@@ -108,10 +149,37 @@
                     <span th:text="${course.getTeacher().getSurname()}"></span>
                 </a>
             </p>
-            <a th:href="@{'/user/home/' + ${id} + '/shop/add'(id=${id} ,courseId=${course.getId()})}" class="btn btn-link add-to-cart"><i class="fas fa-cart-plus"></i> Sepete Ekle</a>
+
+            <a th:href="@{'/user/home/' + ${id} + '/shop/add'(id=${id}, courseId=${course.getId()})}" class="btn btn-link add-to-cart"><i class="fas fa-cart-plus"></i> Sepete Ekle</a>
         </div>
     </div>
 </div>
+<!-- Yorumlar Bölümü -->
+<div class="container">
+    <h2>Yorumlar</h2>
+    <div class="comment-container">
+        <!-- Her bir yorum için döngü -->
+        <div th:each="comment : ${comments}" class="comment">
+            <!-- Yorumun içeriği -->
+            <div class="comment-content">
+                <p th:text="${comment.getComment()}"></p>
+            </div>
+            <div class="comment-info">
+                <!-- Yorumun yıldız değerlendirmesi -->
+                <p class="comment-rating">
+                    <i class="fas fa-star text-warning"></i>
+                    <span th:text="${comment.getRating()}"></span>
+                </p>
+                <!-- Yorum yapan kişinin adı -->
+                <p class="comment-author">
+                    <i class="fas fa-user"></i>
+                    <span th:text="${comment.getUser().getUsername() + ' ' + comment.getUser().getSurname()}"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 </body>
 </html>

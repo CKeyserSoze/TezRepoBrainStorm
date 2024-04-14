@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface CommentsService {
     List<Comments> getAllComments();
     Optional<Comments> getCommentsById(Long id);
+    List<Comments> getCommentsByCourseId(Long courseId);
     Comments createComments(Comments comments);
     Comments updateComments(Comments comments);
     void deleteCommentsById(Long id);

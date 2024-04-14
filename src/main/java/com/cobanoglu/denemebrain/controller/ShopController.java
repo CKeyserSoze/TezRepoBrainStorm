@@ -202,6 +202,7 @@ public class ShopController {
                 takenCourseService.SaveTakenCourse(takenCourseToAdd);
 
             }
+
             session.setAttribute(CartKey,null);
             return "redirect:/user/home/" + user.getId();
         }else
