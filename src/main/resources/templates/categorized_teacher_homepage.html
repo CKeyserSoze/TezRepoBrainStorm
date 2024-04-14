@@ -84,6 +84,13 @@
             }
         }
 
+        .float-right select {
+            font-size: 14px;
+        }
+
+        .custom-select option {
+            font-size: 14px;
+        }
         footer {
             background-color: green; /* Footer arka plan rengi */
             color: #ffffff; /* Footer metin rengi */
@@ -117,7 +124,7 @@
                         <!-- 9. Sınıf dropdown items -->
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/matematik'}">Matematik</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/fizik'}">Fizik</a>
-                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + 'kimya'}">Kimya</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/kimya'}">Kimya</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/biyoloji'}">Biyoloji</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/türk dili ve edebiyatı'}">Türk Dili ve Edebiyatı</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/9' + '/coğrafya'}">Coğrafya</a>
@@ -132,7 +139,7 @@
                         <!-- 10. Sınıf dropdown items -->
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/matematik'}">Matematik</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/fizik'}">Fizik</a>
-                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + 'kimya'}">Kimya</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/kimya'}">Kimya</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/biyoloji'}">Biyoloji</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/türk dili ve edebiyatı'}">Türk Dili ve Edebiyatı</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/10' + '/coğrafya'}">Coğrafya</a>
@@ -147,7 +154,7 @@
                         <!-- 11. Sınıf dropdown items -->
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/matematik'}">Matematik</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/fizik'}">Fizik</a>
-                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + 'kimya'}">Kimya</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/kimya'}">Kimya</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/biyoloji'}">Biyoloji</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/türk dili ve edebiyatı'}">Türk Dili ve Edebiyatı</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/11' + '/coğrafya'}">Coğrafya</a>
@@ -162,7 +169,7 @@
                         <!-- 12. Sınıf dropdown items -->
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/matematik'}">Matematik</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/fizik'}">Fizik</a>
-                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + 'kimya'}">Kimya</a>
+                        <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/kimya'}">Kimya</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/biyoloji'}">Biyoloji</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/türk dili ve edebiyatı'}">Türk Dili ve Edebiyatı</a>
                         <a class="dropdown-item" th:href="@{'/teacher/user/' + ${id} + '/12' + '/coğrafya'}">Coğrafya</a>
@@ -264,6 +271,15 @@
 <div class="container mt-5">
     <h3>
         <small class="text-muted">Tüm Kurslar</small>
+        <div class="float-right">
+            <select class="custom-select" onchange="applyFilter(this.value)">
+                <option value="">Filtrele</option>
+                <option value="price_asc">Fiyat (Artan)</option>
+                <option value="price_desc">Fiyat (Azalan)</option>
+                <option value="rating_asc">Puan (Artan)</option>
+                <option value="rating_desc">Puan (Azalan)</option>
+            </select>
+        </div>
     </h3>
     <div class="row">
         <div class="col-12">

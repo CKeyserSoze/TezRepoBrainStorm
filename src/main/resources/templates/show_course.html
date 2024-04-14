@@ -108,7 +108,7 @@
                     <span th:text="${course.getTeacher().getSurname()}"></span>
                 </a>
             </p>
-            <a href="#" class="btn btn-link add-to-cart"><i class="fas fa-cart-plus"></i> Sepete Ekle</a>
+            <a th:href="@{'/user/home/' + ${id} + '/shop/add'(id=${id} ,courseId=${course.getId()})}" class="btn btn-link add-to-cart"><i class="fas fa-cart-plus"></i> Sepete Ekle</a>
         </div>
     </div>
 </div>
