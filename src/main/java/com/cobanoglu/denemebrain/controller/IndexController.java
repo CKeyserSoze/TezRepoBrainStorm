@@ -37,6 +37,18 @@ public class IndexController {
 
         return "categorized_index";
     }
+    @GetMapping("/home/filter/{filter}")
+    public String filter( @PathVariable String filter, Model model){
+
+        List<Course> filteredCourses = courseService.getCoursesFilteredBy(filter);
+
+        // Model üzerinden görünüme ilet
+        model.addAttribute("courses", filteredCourses);
+        model.addAttribute("filter", filter);
+
+        return "categorized_index";
+
+    }
     @GetMapping("/home/{grade}/{lesson}")
     public String CategorizedIndexPageByGradeAndLesson( @PathVariable String grade,
                                                         @PathVariable String lesson,

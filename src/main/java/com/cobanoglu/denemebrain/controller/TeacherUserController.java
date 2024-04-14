@@ -40,6 +40,19 @@ public class TeacherUserController {
             return "redirect:/error";
         }
     }
+    @GetMapping("/user/{id}/filter/{filter}")
+    public String filter(@PathVariable Long id, @PathVariable String filter, Model model){
+
+        Teacher teacher = teacherService.findById(id);
+        List<Course> filteredCourses = courseService.getCoursesFilteredBy(filter);
+        // Model üzerinden görünüme ilet
+        model.addAttribute("user", teacher);
+        model.addAttribute("courses", filteredCourses);
+        model.addAttribute("filter", filter);
+
+        return "categorized_teacher_homepage";
+
+    }
     @GetMapping("/user/{id}/{lesson}")
     public String showCategorizedPageWithLesson(@PathVariable Long id,
                                                 @PathVariable String lesson,
