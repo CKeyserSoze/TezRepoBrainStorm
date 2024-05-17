@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BrainStorm - Kurs Ekle</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -42,7 +43,6 @@
             max-width: 1000px;
             margin: 0 auto;
             padding: 0 20px;
-
         }
         .course-form {
             background-color: #ffffff;
@@ -120,7 +120,6 @@
         textarea {
             resize: none; /* Text alanının yeniden boyutlandırılmasını devre dışı bırakır */
         }
-
     </style>
 </head>
 <body>
@@ -174,6 +173,28 @@
                         <option value="Resim">Resim</option>
                     </select>
 
+                    <label for="availableTimes">Müsait Zamanlar</label>
+                    <input type="text" id="availableTimes" name="availableTimes" placeholder="Müsait Zamanlarınızı Seçin">
+
+                    <label for="availableTimes">Müsait Zamanlar</label>
+                    <input type="text" id="availableTimesAsHours" name="availableTimes" placeholder="Müsait Zamanlarınızı Seçin">
+                    <div>
+                        <button type="button" onclick="addTime('09:00')">09:00</button>
+                        <button type="button" onclick="addTime('10:00')">10:00</button>
+                        <button type="button" onclick="addTime('11:00')">11:00</button>
+                        <button type="button" onclick="addTime('12:00')">12:00</button>
+                        <button type="button" onclick="addTime('13:00')">13:00</button>
+                        <button type="button" onclick="addTime('14:00')">14:00</button>
+                        <button type="button" onclick="addTime('15:00')">15:00</button>
+                        <button type="button" onclick="addTime('16:00')">16:00</button>
+                        <button type="button" onclick="addTime('17:00')">17:00</button>
+                        <button type="button" onclick="addTime('18:00')">18:00</button>
+                        <button type="button" onclick="addTime('19:00')">19:00</button>
+                        <button type="button" onclick="addTime('20:00')">20:00</button>
+                        <button type="button" onclick="addTime('21:00')">21:00</button>
+                    </div>
+
+
                     <button type="submit">Kursu Yayınla</button>
                     <div class="error-message" id="errorMessage" th:if="${errorMessage}" th:text="${errorMessage}"></div>
                 </div>
@@ -182,38 +203,91 @@
     </div>
 </div>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 <script th:inline="javascript">
-    document.getElementById("courseForm").addEventListener("submit", function(event) {
-        event.preventDefault(); // Formun varsayılan davranışını engelle
+    document.addEventListener("DOMContentLoaded", function() {
+        flatpickr("#availableTimes", {
+            mode: "multiple",
+            enableTime: true,
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            locale: {
+                firstDayOfWeek: 1,
+                weekdays: {
+                    shorthand: ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"],
+                    longhand: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"],
+                },
+                months: {
+                    shorthand: ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
+                    longhand: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
+                },
+            }
+        });
 
-        // URL'den id'yi al
-        var url = window.location.pathname;
-        var id = url.split("/")[3]; // 0: "", 1: "teacher", 2: "user", 3: "id"
+        document.getElementById("courseForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Formun varsayılan davranışını engelle
 
-        // Formun action URL'sini oluştur
-        var actionUrl = "/teacher/user/" + id + "/addcourse";
+            // URL'den id'yi al
+            var url = window.location.pathname;
+            var id = url.split("/")[3]; // 0: "", 1: "teacher", 2: "user", 3: "id"
 
-        // Formun action özniteliğini güncelle
-        document.getElementById("courseForm").action = actionUrl;
+            // Formun action URL'sini oluştur
+            var actionUrl = "/teacher/user/" + id + "/addcourse";
 
-        // Formu gönder
-        this.submit();
+            // Formun action özniteliğini güncelle
+            document.getElementById("courseForm").action = actionUrl;
+
+            // Formu gönder
+            this.submit();
+        });
+
+        function validateForm() {
+            var courseName = document.getElementById('courseName').value;
+            var description = document.getElementById('description').value;
+            var price = document.getElementById('price').value;
+            var errorMessage = document.getElementById('errorMessage');
+
+            if (courseName === '' || description === '' || price === '') {
+                errorMessage.textContent = 'Lütfen tüm alanları doldurun.';
+                return false;
+            } else {
+                errorMessage.textContent = '';
+                return true;
+            }
+        }
     });
 
-    function validateForm() {
-        var courseName = document.getElementById('courseName').value;
-        var description = document.getElementById('description').value;
-        var price = document.getElementById('price').value;
-        var errorMessage = document.getElementById('errorMessage');
+    function addTime(time) {
+    var availableTimesAsHoursInput = document.getElementById('availableTimesAsHours');
 
-        if (courseName === '' || description === '' || price === '') {
-            errorMessage.textContent = 'Lütfen tüm alanları doldurun.';
-            return false;
-        } else {
-            errorMessage.textContent = '';
-            return true;
-        }
+    if (availableTimesAsHoursInput.value !== '') {
+        availableTimesAsHoursInput.value += ', ' + time.split(':')[0];
+    } else {
+        availableTimesAsHoursInput.value = time.split(':')[0];
     }
-</script>
+}
 
+
+    flatpickr("#availableTimes", {
+    mode: "multiple", // Birden çok saat seçimine izin ver
+    enableTime: true, // Saat seçimini etkinleştir
+    dateFormat: "Y-m-d",
+    minDate: "today",
+    disable: [
+        { from: "10:00", to: "15:00" }
+    ],
+    locale: {
+        firstDayOfWeek: 1,
+        weekdays: {
+            shorthand: ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"],
+            longhand: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"],
+        },
+        months: {
+            shorthand: ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
+            longhand: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
+        },
+    }
+});
+</script>
+</body>
+</html>
