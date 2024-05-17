@@ -34,6 +34,8 @@ public class TeacherAddCourseController {
                             @RequestParam("price") String price,
                             @RequestParam("classLevel") String classLevel,
                             @RequestParam("courseSubject") String courseSubject,
+                            @RequestParam("availableTimes") String availableDates,
+                            @RequestParam("availableTimesAsHours") String availableHours,
                             Model model) {
 
         // Kurs bilgilerinin doğruluğunu kontrol et
