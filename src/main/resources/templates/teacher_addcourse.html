@@ -120,6 +120,20 @@
         textarea {
             resize: none; /* Text alanının yeniden boyutlandırılmasını devre dışı bırakır */
         }
+        .time-button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+        .time-button.selected {
+            background-color: #28a745; /* Yeşil */
+        }
+        .time-button:not(.selected) {
+            background-color: #dc3545; /* Kırmızı */
+        }
     </style>
 </head>
 <body>
@@ -169,31 +183,30 @@
                         <option value="Tarih">Tarih</option>
                         <option value="İngilizce">İngilizce</option>
                         <option value="Felsefe">Felsefe</option>
-                        <option value="MÜzik">Müzik</option>
+                        <option value="Müzik">Müzik</option>
                         <option value="Resim">Resim</option>
                     </select>
 
                     <label for="availableTimes">Müsait Zamanlar</label>
                     <input type="text" id="availableTimes" name="availableTimes" placeholder="Müsait Zamanlarınızı Seçin">
 
-                    <label for="availableTimes">Müsait Zamanlar</label>
-                    <input type="text" id="availableTimesAsHours" name="availableTimesAsHours" placeholder="Müsait Zamanlarınızı Seçin">
-                    <div>
-                        <button type="button" onclick="addTime('09:00')">09:00</button>
-                        <button type="button" onclick="addTime('10:00')">10:00</button>
-                        <button type="button" onclick="addTime('11:00')">11:00</button>
-                        <button type="button" onclick="addTime('12:00')">12:00</button>
-                        <button type="button" onclick="addTime('13:00')">13:00</button>
-                        <button type="button" onclick="addTime('14:00')">14:00</button>
-                        <button type="button" onclick="addTime('15:00')">15:00</button>
-                        <button type="button" onclick="addTime('16:00')">16:00</button>
-                        <button type="button" onclick="addTime('17:00')">17:00</button>
-                        <button type="button" onclick="addTime('18:00')">18:00</button>
-                        <button type="button" onclick="addTime('19:00')">19:00</button>
-                        <button type="button" onclick="addTime('20:00')">20:00</button>
-                        <button type="button" onclick="addTime('21:00')">21:00</button>
+                    <label for="availableTimesAsHours">Müsait Saatler</label>
+                    <input type="text" id="availableTimesAsHours" name="availableTimesAsHours" placeholder="Müsait Zamanlarınızı Seçin" readonly>
+                    <div id="timeButtons">
+                        <button type="button" class="time-button" onclick="toggleTime(this, '09:00')">09:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '10:00')">10:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '11:00')">11:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '12:00')">12:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '13:00')">13:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '14:00')">14:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '15:00')">15:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '16:00')">16:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '17:00')">17:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '18:00')">18:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '19:00')">19:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '20:00')">20:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '21:00')">21:00</button>
                     </div>
-
 
                     <button type="submit">Kursu Yayınla</button>
                     <div class="error-message" id="errorMessage" th:if="${errorMessage}" th:text="${errorMessage}"></div>
@@ -209,7 +222,7 @@
         flatpickr("#availableTimes", {
             mode: "multiple",
             enableTime: true,
-            dateFormat: "Y-m-d",
+            dateFormat: "d-m-Y ",
             minDate: "today",
             locale: {
                 firstDayOfWeek: 1,
@@ -225,7 +238,9 @@
         });
 
         document.getElementById("courseForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Formun varsayılan davranışını engelle
+            if (!validateForm()) {
+                event.preventDefault(); // Formun varsayılan davranışını engelle
+            }
 
             // URL'den id'yi al
             var url = window.location.pathname;
@@ -236,9 +251,6 @@
 
             // Formun action özniteliğini güncelle
             document.getElementById("courseForm").action = actionUrl;
-
-            // Formu gönder
-            this.submit();
         });
 
         function validateForm() {
@@ -257,37 +269,21 @@
         }
     });
 
-    function addTime(time) {
+    function toggleTime(button, time) {
         var availableTimesAsHoursInput = document.getElementById('availableTimesAsHours');
+        var times = availableTimesAsHoursInput.value ? availableTimesAsHoursInput.value.split(', ') : [];
+        var timeIndex = times.indexOf(time.split(':')[0]);
 
-        if (availableTimesAsHoursInput.value !== '') {
-            availableTimesAsHoursInput.value += ', ' + time.split(':')[0];
+        if (timeIndex > -1) {
+            times.splice(timeIndex, 1);
+            button.classList.remove('selected');
         } else {
-            availableTimesAsHoursInput.value = time.split(':')[0];
+            times.push(time.split(':')[0]);
+            button.classList.add('selected');
         }
+
+        availableTimesAsHoursInput.value = times.join(', ');
     }
-
-
-    flatpickr("#availableTimes", {
-        mode: "multiple", // Birden çok saat seçimine izin ver
-        enableTime: true, // Saat seçimini etkinleştir
-        dateFormat: "Y-m-d",
-        minDate: "today",
-        disable: [
-            { from: "10:00", to: "15:00" }
-        ],
-        locale: {
-            firstDayOfWeek: 1,
-            weekdays: {
-                shorthand: ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"],
-                longhand: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"],
-            },
-            months: {
-                shorthand: ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
-                longhand: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
-            },
-        }
-    });
 </script>
 </body>
 </html>
