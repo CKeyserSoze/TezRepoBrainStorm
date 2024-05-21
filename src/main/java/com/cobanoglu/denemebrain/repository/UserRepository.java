@@ -6,10 +6,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long > {
-    User findByEmail(String username);
+    User findByEmail(String email);
     boolean existsByEmail(String email);
-
     User save(User user);
+
 
 
     //Bu alana gerekli CRUD işlemlerinin imzalarını yazıp asıl görevi service katmanında yapacağım..

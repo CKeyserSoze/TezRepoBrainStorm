@@ -18,4 +18,5 @@ public interface UserService {
     User getUserByEmail(String email);
     User findById(Long id);
     boolean findByEmail(String email);
+    void verifyUser(String token);
 }

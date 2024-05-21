@@ -3,6 +3,7 @@ package com.cobanoglu.denemebrain.service;
 import com.cobanoglu.denemebrain.entity.Course;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface CourseService {
@@ -17,4 +18,9 @@ public interface CourseService {
     Course findById(Long id);
     List<Course> findByTeacherId(Long teacherId);
     List<Course> getCoursesFilteredBy(String filter);
+    List<String> getAvailableHoursForDate(Long courseId, String date);
+    Map<String, List<String>> parseAvailableHours(String availableHoursString);
+    List<String> getAvailableDates(String availableTimes);
+    List<String> getAvailableHours(String availableHours);
+
 }
