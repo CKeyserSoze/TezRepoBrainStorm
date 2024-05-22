@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrainStorm - Profil Düzenleme</title>
+    <title>BrainStorm - Kurs Düzenleme</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
@@ -89,12 +89,12 @@
             font-size: 18px;
             cursor: pointer;
             transition: background-color 0.3s;
-            width: calc(50% - 10px); /* Butonların genişliği eşit olacak şekilde ayarlanıyor */
+            width: calc(50% - 10px);
             max-width: 200px;
             align-self: center;
         }
         .edit-form button:first-child {
-            margin-right: 10px; /* İlk butonun sağ tarafında boşluk bırakılıyor */
+            margin-right: 10px;
         }
         .edit-form button:hover {
             background-color: #45a049;
@@ -113,19 +113,46 @@
             margin-bottom: 20px;
             padding: 15px;
             border-radius: 5px;
-            background-color: #f8d7da; /* Kırmızı arkaplan rengi */
-            color: #721c24; /* Kırmızı metin rengi */
-            border: 1px solid #f5c6cb; /* Kırmızı kenarlık rengi */
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
-
-        /* Başarı mesajları */
         .success-message {
             margin-bottom: 20px;
             padding: 15px;
             border-radius: 5px;
-            background-color: #d4edda; /* Yeşil arkaplan rengi */
-            color: #155724; /* Yeşil metin rengi */
-            border: 1px solid #c3e6cb; /* Yeşil kenarlık rengi */
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .time-slots {
+            margin-top: 20px;
+        }
+        .time-slots h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: 600;
+        }
+        .time-slots div {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .time-slots .slot {
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .time-slots .available {
+            background-color: #4CAF50;
+            color: #ffffff;
+        }
+        .time-slots .unavailable {
+            background-color: #e0e0e0;
+            color: #757575;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -154,13 +181,22 @@
                     <label for="course_price">Fiyat</label>
                     <input type="number" id="course_price" name="course_price" placeholder="Fiyatı Girin" th:value="${course.price}">
                 </div>
+                <div class="form-group">
+                    <label for="course_availabletimes">Müsait Tarihler</label>
+                    <input type="date" id="course_availabletimes" name="course_availabletimes">
+                </div>
+                <div class="time-slots">
+                    <h3>Müsait Saatler</h3>
+                    <div id="available-hours">
+                        <div class="slot unavailable">Seçili bir tarih yok</div>
+                    </div>
+                </div>
                 <button type="submit">Kaydet</button>
                 <button type="button" th:onclick="'window.location.href=\'/teacher/user/' + ${id} + '/course/delete/' + ${course.getId()} + '\' '">Sil</button>
             </form>
         </div>
     </div>
 </div>
-
 
 <script>
     function validateForm() {
@@ -170,16 +206,32 @@
 
         if (courseName.trim() === "" || courseDescription.trim() === "" || isNaN(coursePrice) || coursePrice <= 0){
             alert("Lütfen tüm alanları doldurun.");
-            return false; // Formun gönderimini durdur
+            return false;
         }
-        return true; // Formu gönder
+        return true;
     }
 
+    var availableDates = /*[[${availableDates}]]*/ [];
+    var availableHours = /*[[${availableHours}]]*/ [];
 
+    document.getElementById("course_availabletimes").setAttribute("min", new Date().toISOString().split('T')[0]);
 
-
+    document.getElementById('course_availabletimes').addEventListener('change', function () {
+        var selectedDate = this.value;
+        var slotsContainer = document.getElementById('available-hours');
+        slotsContainer.innerHTML = '';
+        if (availableDates.includes(selectedDate)) {
+            availableHours.forEach(hour => {
+                var slot = document.createElement('div');
+                slot.className = 'slot available';
+                slot.textContent = hour;
+                slotsContainer.appendChild(slot);
+            });
+        } else {
+            slotsContainer.innerHTML = '<div class="slot unavailable">Müsait saat yok</div>';
+        }
+    });
 </script>
-
 
 </body>
 </html>

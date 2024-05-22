@@ -1,6 +1,5 @@
 package com.cobanoglu.denemebrain.controller;
 
-import com.cobanoglu.denemebrain.entity.User;
 import com.cobanoglu.denemebrain.service.TeacherService;
 import com.cobanoglu.denemebrain.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +21,7 @@ public class UserRegisterController {
     }
 
     @GetMapping("register")
-    public String showRegisterForm(){
-
+    public String showRegisterForm() {
         return "user_register";
     }
 
@@ -39,18 +37,24 @@ public class UserRegisterController {
         // Password validation
         if (!password.equals(confirmPassword)) {
             model.addAttribute("error", "Şifreler eşleşmiyor.");
-            return "user_register"; // Hata durumunda kayıt sayfasını tekrar göster
+            return "user_register";
         }
 
         // Check if email already exists
-        if (userService.isUserExists(email) || teacherService.existsByEmail(email) ) {
+        if (userService.isUserExists(email) || teacherService.existsByEmail(email)) {
             model.addAttribute("error", "Bu emaile ait bir hesap zaten mevcut.");
-            return "user_register"; // Hata durumunda kayıt sayfasını tekrar göster
+            return "user_register";
         }
 
         userService.saveUser(firstName, lastName, educationLevel, email, password);
-        User user = userService.getUserByEmail(email);
-        // Başarılı kayıt durumunda index.html sayfasına yönlendir
-        return "redirect:/user/home/" + user.getId();
+        model.addAttribute("success", "Kayıt başarılı! Lütfen emailinizi doğrulayın.");
+        return "user_register";
+    }
+
+    @GetMapping("/verify")
+    public String verifyUser(@RequestParam("token") String token, Model model) {
+        userService.verifyUser(token);
+        model.addAttribute("success", "Email doğrulandı! Giriş yapabilirsiniz.");
+        return "user_login"; // Email doğrulandıktan sonra yönlendirilecek sayfa
     }
 }

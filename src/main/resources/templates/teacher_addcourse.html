@@ -120,6 +120,23 @@
         textarea {
             resize: none; /* Text alanının yeniden boyutlandırılmasını devre dışı bırakır */
         }
+
+
+        .time-button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+        .time-button.selected {
+            background-color: #28a745; /* Yeşil */
+        }
+        .time-button:not(.selected) {
+            background-color: #dc3545; /* Kırmızı */
+        }
+
     </style>
 </head>
 <body>
@@ -169,12 +186,13 @@
                         <option value="Tarih">Tarih</option>
                         <option value="İngilizce">İngilizce</option>
                         <option value="Felsefe">Felsefe</option>
-                        <option value="MÜzik">Müzik</option>
+                        <option value="Müzik">Müzik</option>
                         <option value="Resim">Resim</option>
                     </select>
 
                     <label for="availableTimes">Müsait Zamanlar</label>
                     <input type="text" id="availableTimes" name="availableTimes" placeholder="Müsait Zamanlarınızı Seçin">
+
 
                     <label for="availableTimes">Müsait Zamanlar</label>
                     <input type="text" id="availableTimesAsHours" name="availableTimes" placeholder="Müsait Zamanlarınızı Seçin">
@@ -195,6 +213,26 @@
                     </div>
 
 
+
+                    <label for="availableTimesAsHours">Müsait Saatler</label>
+                    <input type="text" id="availableTimesAsHours" name="availableTimesAsHours" placeholder="Müsait Zamanlarınızı Seçin" readonly>
+                    <div id="timeButtons">
+                        <button type="button" class="time-button" onclick="toggleTime(this, '09:00')">09:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '10:00')">10:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '11:00')">11:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '12:00')">12:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '13:00')">13:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '14:00')">14:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '15:00')">15:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '16:00')">16:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '17:00')">17:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '18:00')">18:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '19:00')">19:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '20:00')">20:00</button>
+                        <button type="button" class="time-button" onclick="toggleTime(this, '21:00')">21:00</button>
+                    </div>
+
+
                     <button type="submit">Kursu Yayınla</button>
                     <div class="error-message" id="errorMessage" th:if="${errorMessage}" th:text="${errorMessage}"></div>
                 </div>
@@ -209,7 +247,11 @@
         flatpickr("#availableTimes", {
             mode: "multiple",
             enableTime: true,
+
             dateFormat: "Y-m-d",
+
+            dateFormat: "d-m-Y ",
+
             minDate: "today",
             locale: {
                 firstDayOfWeek: 1,
@@ -223,6 +265,7 @@
                 },
             }
         });
+
 
         document.getElementById("courseForm").addEventListener("submit", function(event) {
             event.preventDefault(); // Formun varsayılan davranışını engelle
@@ -288,6 +331,56 @@
         },
     }
 });
+
+
+        document.getElementById("courseForm").addEventListener("submit", function(event) {
+            if (!validateForm()) {
+                event.preventDefault(); // Formun varsayılan davranışını engelle
+            }
+
+            // URL'den id'yi al
+            var url = window.location.pathname;
+            var id = url.split("/")[3]; // 0: "", 1: "teacher", 2: "user", 3: "id"
+
+            // Formun action URL'sini oluştur
+            var actionUrl = "/teacher/user/" + id + "/addcourse";
+
+            // Formun action özniteliğini güncelle
+            document.getElementById("courseForm").action = actionUrl;
+        });
+
+        function validateForm() {
+            var courseName = document.getElementById('courseName').value;
+            var description = document.getElementById('description').value;
+            var price = document.getElementById('price').value;
+            var errorMessage = document.getElementById('errorMessage');
+
+            if (courseName === '' || description === '' || price === '') {
+                errorMessage.textContent = 'Lütfen tüm alanları doldurun.';
+                return false;
+            } else {
+                errorMessage.textContent = '';
+                return true;
+            }
+        }
+    });
+
+    function toggleTime(button, time) {
+        var availableTimesAsHoursInput = document.getElementById('availableTimesAsHours');
+        var times = availableTimesAsHoursInput.value ? availableTimesAsHoursInput.value.split(', ') : [];
+        var timeIndex = times.indexOf(time.split(':')[0]);
+
+        if (timeIndex > -1) {
+            times.splice(timeIndex, 1);
+            button.classList.remove('selected');
+        } else {
+            times.push(time.split(':')[0]);
+            button.classList.add('selected');
+        }
+
+        availableTimesAsHoursInput.value = times.join(', ');
+    }
+
 </script>
 </body>
 </html>
