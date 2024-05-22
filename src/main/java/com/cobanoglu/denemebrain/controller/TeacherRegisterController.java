@@ -86,6 +86,7 @@ public class TeacherRegisterController {
 
         model.addAttribute("success", "Kayıt başarılı! Lütfen emailinizi doğrulayın.");
         return "teacher_register";
+
     }
 
     @GetMapping("/verify")
