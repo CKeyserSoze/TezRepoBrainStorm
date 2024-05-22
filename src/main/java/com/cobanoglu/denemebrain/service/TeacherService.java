@@ -18,4 +18,5 @@ public interface TeacherService {
     Teacher findLoggedInTeacher();
     Teacher getUserByEmail(String email);
     void saveTeacherAll(Teacher teacher);
+    void verifyTeacher(String token);
 }

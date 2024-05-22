@@ -96,5 +96,14 @@ public class TeacherServiceImpl implements TeacherService{
 
     }
 
+    @Override
+    public void verifyTeacher(String token) {
+        Teacher teacher = teacherRepository.findByVerificationToken(token);
+        if (teacher != null) {
+            teacher.setUsed(true);
+            teacherRepository.save(teacher);
+        }
+    }
+
 
 }
