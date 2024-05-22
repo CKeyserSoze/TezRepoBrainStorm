@@ -1,6 +1,7 @@
 package com.cobanoglu.denemebrain.entity;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "course")
@@ -36,16 +37,13 @@ public class Course {
     @Column(name = "course_lesson", nullable = false)
     private String lesson;
 
-    @Column(name = "available_times", columnDefinition = "TEXT")
-    private String availableTimes;
-
-    @Column(name = "available_hours", columnDefinition = "TEXT")
-    private String availableHours;
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CourseSchedule> schedules;
 
     public Course() {
     }
 
-    public Course(Long id, String name, String description, int price, String image, float rating, String grade, String lesson, Teacher teacher, String availableTimes, String availableHours) {
+    public Course(Long id, String name, String description, int price, String image, float rating, String grade, String lesson, Teacher teacher) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -55,11 +53,9 @@ public class Course {
         this.rating = rating;
         this.grade = grade;
         this.lesson = lesson;
-        this.availableTimes = availableTimes;
-        this.availableHours = availableHours;
     }
 
-    public Course(String courseName, String description, int price, String image, String grade, String lesson, Teacher teacher, String availableTimes, String availableHours) {
+    public Course(String courseName, String description, int price, String image, String grade, String lesson, Teacher teacher) {
         this.name = courseName;
         this.description = description;
         this.price = price;
@@ -67,8 +63,6 @@ public class Course {
         this.grade = grade;
         this.lesson = lesson;
         this.teacher = teacher;
-        this.availableTimes = availableTimes;
-        this.availableHours = availableHours;
     }
 
     // Getter and Setter methods
@@ -144,19 +138,11 @@ public class Course {
         this.lesson = lesson;
     }
 
-    public String getAvailableTimes() {
-        return availableTimes;
+    public List<CourseSchedule> getSchedules() {
+        return schedules;
     }
 
-    public void setAvailableTimes(String availableTimes) {
-        this.availableTimes = availableTimes;
-    }
-
-    public String getAvailableHours() {
-        return availableHours;
-    }
-
-    public void setAvailableHours(String availableHours) {
-        this.availableHours = availableHours;
+    public void setSchedules(List<CourseSchedule> schedules) {
+        this.schedules = schedules;
     }
 }
