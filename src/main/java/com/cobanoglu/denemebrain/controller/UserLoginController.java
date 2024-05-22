@@ -33,25 +33,29 @@ public class UserLoginController {
     public String login(@RequestParam("email") String email, @RequestParam("password") String password, Model model) {
         // Kullanıcıyı e-posta adresine göre bul
         User user = userService.getUserByEmail(email);
-        boolean isValidTeacher = teacherService.isValidTeacher(email, password);
+        Teacher teacher = teacherService.findByEmail(email);
+        boolean isValidUser = user != null && userService.isValidUser(user.getEmail(), password);
+        boolean isValidTeacher = teacher != null && teacherService.isValidTeacher(teacher.getEmail(), password);
+
         if (isValidTeacher) {
-            Teacher teacher = teacherService.findByEmail(email);
-            return "redirect:/teacher/user/" + teacher.getId();
-        }
-        else{
-            if (user != null && userService.isValidUser(user.getEmail(), password)) {
-                // Kullanıcı doğrulandıysa kullanıcı kimliğini modelde tut
-                model.addAttribute("user_id", user.getId());
-                return "redirect:/user/home/" + user.getId();
-            } else {
-                model.addAttribute("error", "E-posta veya şifre yanlış");
-                return "user_login"; // Yanlışsa login sayfasında hata göster
+            // Öğretmenin e-postası doğrulanmış mı kontrol et
+            if (!teacher.isUsed()) {
+                model.addAttribute("error", "Lütfen e-posta adresinizi doğrulayın.");
+                return "user_login"; // E-posta doğrulanmadıysa hata mesajı göster
             }
-
+            return "redirect:/teacher/user/" + teacher.getId();
+        } else if (isValidUser) {
+            // Kullanıcının e-postası doğrulanmış mı kontrol et
+            if (!user.isUsed()) {
+                model.addAttribute("error", "Lütfen e-posta adresinizi doğrulayın.");
+                return "user_login"; // E-posta doğrulanmadıysa hata mesajı göster
+            }
+            // Kullanıcı doğrulandıysa kullanıcı kimliğini modelde tut
+            model.addAttribute("user_id", user.getId());
+            return "redirect:/user/home/" + user.getId();
+        } else {
+            model.addAttribute("error", "E-posta veya şifre yanlış");
+            return "user_login"; // Yanlışsa login sayfasında hata göster
         }
-
-
-
     }
-
 }
