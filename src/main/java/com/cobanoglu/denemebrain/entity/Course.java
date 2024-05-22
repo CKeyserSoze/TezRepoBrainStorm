@@ -2,15 +2,13 @@ package com.cobanoglu.denemebrain.entity;
 
 import jakarta.persistence.*;
 
-import java.util.Optional;
-
 @Entity
 @Table(name = "course")
 public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "course_id",nullable = false)
+    @Column(name = "course_id", nullable = false)
     private Long id;
 
     @Column(name = "course_name", nullable = false)
@@ -19,39 +17,35 @@ public class Course {
     @Column(name = "course_description", nullable = false)
     private String description;
 
-    @Column(name = "course_price",nullable = false)
+    @Column(name = "course_price", nullable = false)
     private int price;
 
     @Column(name = "course_image")
     private String image = "/static/images/course-image2.jpg";
 
     @ManyToOne
-    @JoinColumn(name = "teacher_id",nullable = false)
+    @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
 
     @Column(name = "course_rating")
     private float rating;
 
-    public String getGrade() {
-        return grade;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
-
-    public String getLesson() {
-        return lesson;
-    }
-
-    public void setLesson(String lesson) {
-        this.lesson = lesson;
-    }
-
     @Column(name = "course_grade", nullable = false)
     private String grade;
 
-    public Course(Long id, String name, String description, int price, String image,  float rating, String grade, String lesson,Teacher teacher) {
+    @Column(name = "course_lesson", nullable = false)
+    private String lesson;
+
+    @Column(name = "available_times", columnDefinition = "TEXT")
+    private String availableTimes;
+
+    @Column(name = "available_hours", columnDefinition = "TEXT")
+    private String availableHours;
+
+    public Course() {
+    }
+
+    public Course(Long id, String name, String description, int price, String image, float rating, String grade, String lesson, Teacher teacher, String availableTimes, String availableHours) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -61,28 +55,23 @@ public class Course {
         this.rating = rating;
         this.grade = grade;
         this.lesson = lesson;
+        this.availableTimes = availableTimes;
+        this.availableHours = availableHours;
     }
 
-    public Course() {
+    public Course(String courseName, String description, int price, String image, String grade, String lesson, Teacher teacher, String availableTimes, String availableHours) {
+        this.name = courseName;
+        this.description = description;
+        this.price = price;
+        this.image = image;
+        this.grade = grade;
+        this.lesson = lesson;
+        this.teacher = teacher;
+        this.availableTimes = availableTimes;
+        this.availableHours = availableHours;
     }
 
-    @Column(name = "course_lesson", nullable = false)
-    private String lesson;
-
-    public Course(String courseName, String description, int price, String image, String grade,String lesson,Teacher teacher) {
-        this.name=courseName;
-        this.description=description;
-        this.price=price;
-        this.image=image;
-        this.grade=grade;
-        this.lesson=lesson;
-        this.teacher=teacher;
-    }
-
-    public Course(String courseName, String description, int parsedPrice, String image, Optional<Teacher> teacher) {
-
-    }
-
+    // Getter and Setter methods
     public Long getId() {
         return id;
     }
@@ -137,5 +126,37 @@ public class Course {
 
     public void setRating(float rating) {
         this.rating = rating;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getLesson() {
+        return lesson;
+    }
+
+    public void setLesson(String lesson) {
+        this.lesson = lesson;
+    }
+
+    public String getAvailableTimes() {
+        return availableTimes;
+    }
+
+    public void setAvailableTimes(String availableTimes) {
+        this.availableTimes = availableTimes;
+    }
+
+    public String getAvailableHours() {
+        return availableHours;
+    }
+
+    public void setAvailableHours(String availableHours) {
+        this.availableHours = availableHours;
     }
 }
