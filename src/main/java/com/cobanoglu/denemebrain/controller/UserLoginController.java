@@ -1,6 +1,5 @@
 package com.cobanoglu.denemebrain.controller;
 
-
 import com.cobanoglu.denemebrain.entity.Teacher;
 import com.cobanoglu.denemebrain.entity.User;
 import com.cobanoglu.denemebrain.service.TeacherService;
@@ -35,12 +34,17 @@ public class UserLoginController {
         // Kullanıcıyı e-posta adresine göre bul
         User user = userService.getUserByEmail(email);
         boolean isValidTeacher = teacherService.isValidTeacher(email, password);
+
         if (isValidTeacher) {
             Teacher teacher = teacherService.findByEmail(email);
             return "redirect:/teacher/user/" + teacher.getId();
-        }
-        else{
+        } else {
             if (user != null && userService.isValidUser(user.getEmail(), password)) {
+                // Kullanıcının e-postası doğrulanmış mı kontrol et
+                if (!user.isUsed()) {
+                    model.addAttribute("error", "Lütfen e-posta adresinizi doğrulayın.");
+                    return "user_login"; // E-posta doğrulanmadıysa hata mesajı göster
+                }
                 // Kullanıcı doğrulandıysa kullanıcı kimliğini modelde tut
                 model.addAttribute("user_id", user.getId());
                 return "redirect:/user/home/" + user.getId();
@@ -48,11 +52,6 @@ public class UserLoginController {
                 model.addAttribute("error", "E-posta veya şifre yanlış");
                 return "user_login"; // Yanlışsa login sayfasında hata göster
             }
-
         }
-
-
-
     }
-
 }
