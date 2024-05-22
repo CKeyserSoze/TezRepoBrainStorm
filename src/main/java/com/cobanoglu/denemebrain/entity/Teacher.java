@@ -30,6 +30,28 @@ public class Teacher {
     @Column(name = "teacher_information")
     private String teacherInformation;
 
+    @Column(name = "is_used", nullable = false)
+    private boolean isUsed = false;
+
+    @Column(name = "verification_token", unique = true)
+    private String verificationToken;
+
+    public boolean isUsed() {
+        return isUsed;
+    }
+
+    public void setUsed(boolean used) {
+        isUsed = used;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
+    }
+
     public String getTeacherInformation() {
         return teacherInformation;
     }

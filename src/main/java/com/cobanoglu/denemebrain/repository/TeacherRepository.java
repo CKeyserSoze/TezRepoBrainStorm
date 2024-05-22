@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     Teacher findByEmail(String username);
     Optional<Teacher> findById(Long id);
+    Teacher findByVerificationToken(String token);
 
     // Özel sorguları veya metotları buraya ekleyebilirsiniz
 
