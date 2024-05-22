@@ -29,6 +29,16 @@ public class User {
     @Column(name = "user_information")
     private String information;
 
+    private boolean isUsed = false;
+
+    public boolean isUsed() {
+        return isUsed;
+    }
+
+    public void setUsed(boolean used) {
+        isUsed = used;
+    }
+
     public String getInformation() {
         return information;
     }

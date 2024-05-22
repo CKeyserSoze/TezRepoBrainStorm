@@ -8,6 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+import java.util.StringJoiner;
+
 @Controller
 @RequestMapping("/teacher/user")
 public class TeacherAddCourseController {
@@ -22,7 +25,7 @@ public class TeacherAddCourseController {
 
     @GetMapping("/{id}/addcourse")
     public String showAddCourseForm(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("id",id);
+        model.addAttribute("id", id);
         model.addAttribute("teacher", new Teacher());
         return "teacher_addcourse";
     }
@@ -34,6 +37,8 @@ public class TeacherAddCourseController {
                             @RequestParam("price") String price,
                             @RequestParam("classLevel") String classLevel,
                             @RequestParam("courseSubject") String courseSubject,
+                            @RequestParam("availableTimes") String availableTimes,
+                            @RequestParam("availableTimesAsHours") String availableTimesAsHours,
                             Model model) {
 
         // Kurs bilgilerinin doğruluğunu kontrol et
@@ -48,13 +53,38 @@ public class TeacherAddCourseController {
             model.addAttribute("errorMessage", "Öğretmen bulunamadı.");
             return "teacher_addcourse";
         }
-        int parsedPrice = Integer.parseInt(price);
+
+        // Müsait zamanları işle ve formatla
+        String formattedAvailableTimes = formatAvailableTimes(availableTimes);
+        String formattedAvailableHours = formatAvailableHours(availableTimesAsHours);
+
         // Kursu kaydet
-        Course course = new Course(courseName, description, parsedPrice, "/static/images/course-image2.jpg", classLevel, courseSubject, teacher);
+        int parsedPrice = Integer.parseInt(price);
+        Course course = new Course(courseName, description, parsedPrice, "/static/images/course-image2.jpg", classLevel, courseSubject, teacher, formattedAvailableTimes, formattedAvailableHours);
         courseService.save(course);
 
         // Başarılı mesajı ekle ve öğretmenin profil sayfasına yönlendir
         model.addAttribute("successMessage", "Kurs başarıyla eklendi.");
         return "redirect:/teacher/user/" + teacherId;
+    }
+
+    private String formatAvailableTimes(String availableTimes) {
+        StringJoiner formattedAvailableTimes = new StringJoiner(";");
+        // Örneğin, verileri belirli bir formatta işleyebilirsiniz
+        String[] times = availableTimes.split(", ");
+        for (String time : times) {
+            formattedAvailableTimes.add(time);
+        }
+        return formattedAvailableTimes.toString();
+    }
+
+    private String formatAvailableHours(String availableTimesAsHours) {
+        StringJoiner formattedAvailableHours = new StringJoiner(";");
+        // Örneğin, verileri belirli bir formatta işleyebilirsiniz
+        String[] hours = availableTimesAsHours.split(", ");
+        for (String hour : hours) {
+            formattedAvailableHours.add(hour);
+        }
+        return formattedAvailableHours.toString();
     }
 }
