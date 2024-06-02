@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BrainStorm - Kurs Düzenleme</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -80,6 +81,12 @@
         .edit-form textarea:focus {
             border-color: #4CAF50;
         }
+        .edit-form .button-group {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 20px;
+        }
         .edit-form button {
             background-color: #4CAF50;
             color: #ffffff;
@@ -91,10 +98,7 @@
             transition: background-color 0.3s;
             width: calc(50% - 10px);
             max-width: 200px;
-            align-self: center;
-        }
-        .edit-form button:first-child {
-            margin-right: 10px;
+            margin: 0 5px;
         }
         .edit-form button:hover {
             background-color: #45a049;
@@ -146,13 +150,34 @@
             transition: background-color 0.3s;
         }
         .time-slots .available {
-            background-color: #4CAF50;
+            background-color: #007bff;
             color: #ffffff;
         }
-        .time-slots .unavailable {
-            background-color: #e0e0e0;
-            color: #757575;
-            cursor: not-allowed;
+        .time-slots .selected {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .legend div {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+        }
+        .legend .box {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
+        .legend .available-box {
+            background-color: #007bff;
+        }
+        .legend .selected-box {
+            background-color: #dc3545;
         }
     </style>
 </head>
@@ -166,71 +191,106 @@
     <div class="profile-edit">
         <div class="edit-form">
             <h2>Kursu Düzenle</h2>
+            <form th:action="@{/teacher/user/{id}/course/edit/{courseId}(id=${id}, courseId=${courseId})}" method="get" id="dateForm">
+                <input type="hidden" id="dateFormId" name="id" th:value="${id}">
+                <input type="hidden" id="dateFormCourseId" name="courseId" th:value="${courseId}">
+                <div class="form-group">
+                    <label for="dateFormCourseName">Kurs Adı</label>
+                    <input type="text" id="dateFormCourseName" name="course_name" placeholder="Kurs Adını Girin" th:value="${course.name}">
+                </div>
+                <div class="form-group">
+                    <label for="dateFormCourseDescription">Kurs Açıklaması</label>
+                    <input type="text" id="dateFormCourseDescription" name="course_description" placeholder="Kurs Açıklamasını Girin" th:value="${course.description}">
+                </div>
+                <div class="form-group">
+                    <label for="dateFormCoursePrice">Fiyat</label>
+                    <input type="number" id="dateFormCoursePrice" name="course_price" placeholder="Fiyatı Girin" th:value="${course.price}">
+                </div>
+                <div class="form-group">
+                    <label for="course_availabletimes">Tarih Seç</label>
+                    <input type="text" id="course_availabletimes" name="date" placeholder="Tarih Seçin" th:value="${selectedDate}" onchange="document.getElementById('dateForm').submit();">
+                </div>
+            </form>
             <form th:action="@{/teacher/user/{id}/course/edit/{courseId}(id=${id}, courseId=${courseId})}" method="post" onsubmit="return validateForm()">
-                <input type="hidden" id="id" name="id" th:value="${id}">
-                <input type="hidden" id="courseId" name="courseId" th:value="${courseId}">
-                <div class="form-group">
-                    <label for="course_name">Kurs Adı</label>
-                    <input type="text" id="course_name" name="course_name" placeholder="Kurs Adını Girin" th:value="${course.name}">
-                </div>
-                <div class="form-group">
-                    <label for="course_description">Kurs Açıklaması</label>
-                    <input type="text" id="course_description" name="course_description" placeholder="Kurs Açıklamasını Girin" th:value="${course.description}">
-                </div>
-                <div class="form-group">
-                    <label for="course_price">Fiyat</label>
-                    <input type="number" id="course_price" name="course_price" placeholder="Fiyatı Girin" th:value="${course.price}">
-                </div>
-                <div class="form-group">
-                    <label for="course_availabletimes">Müsait Tarihler</label>
-                    <input type="date" id="course_availabletimes" name="course_availabletimes">
-                </div>
+                <input type="hidden" id="editFormId" name="id" th:value="${id}">
+                <input type="hidden" id="editFormCourseId" name="courseId" th:value="${courseId}">
+                <input type="hidden" id="editFormCourseName" name="course_name" th:value="${course.name}">
+                <input type="hidden" id="editFormCourseDescription" name="course_description" th:value="${course.description}">
+                <input type="hidden" id="editFormCoursePrice" name="course_price" th:value="${course.price}">
+                <input type="hidden" id="editFormSelectedDate" name="selectedDate" th:value="${selectedDate}">
+                <input type="hidden" id="editFormCourseAvailableHours" name="course_availablehours" th:value="${selectedUnavailableHours != null ? selectedUnavailableHours.toString().replaceAll('[\\[\\]]', '') : ''}">
                 <div class="time-slots">
                     <h3>Müsait Saatler</h3>
                     <div id="available-hours">
-                        <div class="slot unavailable">Seçili bir tarih yok</div>
+                        <div th:each="hour : ${availableHours}">
+                            <div th:class="${selectedUnavailableHours != null && selectedUnavailableHours.contains(hour) ? 'slot selected' : 'slot available'}"
+                                 th:text="${hour}" onclick="toggleHour(this, '${hour}')"></div>
+                        </div>
                     </div>
                 </div>
-                <button type="submit">Kaydet</button>
-                <button type="button" th:onclick="'window.location.href=\'/teacher/user/' + ${id} + '/course/delete/' + ${course.getId()} + '\' '">Sil</button>
+                <div class="legend">
+                    <div>
+                        <div class="box available-box"></div>
+                        <span>Müsait</span>
+                    </div>
+                    <div>
+                        <div class="box selected-box"></div>
+                        <span>Dolu</span>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button type="submit">Kaydet</button>
+                    <button type="button" th:onclick="'window.location.href=\'/teacher/user/' + ${id} + '/course/delete/' + ${course.id} + '\' '">Sil</button>
+                </div>
             </form>
         </div>
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 <script>
-    function validateForm() {
-        var courseName = document.getElementById("course_name").value;
-        var courseDescription = document.getElementById("course_description").value;
-        var coursePrice = parseInt(document.getElementById("course_price").value);
+    document.addEventListener("DOMContentLoaded", function() {
+        flatpickr("#course_availabletimes", {
+            dateFormat: "d-m-Y",  // Mevcut tarih formatını kullanın
+            minDate: "today",
+            locale: {
+                firstDayOfWeek: 1,
+                weekdays: {
+                    shorthand: ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"],
+                    longhand: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"],
+                },
+                months: {
+                    shorthand: ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
+                    longhand: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
+                },
+            }
+        });
 
-        if (courseName.trim() === "" || courseDescription.trim() === "" || isNaN(coursePrice) || coursePrice <= 0){
-            alert("Lütfen tüm alanları doldurun.");
-            return false;
+        var selectedHoursInput = document.getElementById('editFormCourseAvailableHours');
+        selectedHoursInput.value = selectedHoursInput.value.split(',').map(h => h.trim()).filter(h => h !== '').join(',');
+    });
+
+    function toggleHour(element, hour) {
+        element.classList.toggle('selected');
+        element.classList.toggle('available');
+
+        var selectedHoursInput = document.getElementById('editFormCourseAvailableHours');
+        var selectedHours = selectedHoursInput.value ? selectedHoursInput.value.split(',').map(h => h.trim()) : [];
+
+        if (element.classList.contains('selected')) {
+            selectedHours = selectedHours.filter(h => h !== hour);
+        } else {
+            selectedHours.push(hour);
         }
-        return true;
+
+        selectedHoursInput.value = selectedHours.join(',');
     }
 
-    var availableDates = /*[[${availableDates}]]*/ [];
-    var availableHours = /*[[${availableHours}]]*/ [];
-
-    document.getElementById("course_availabletimes").setAttribute("min", new Date().toISOString().split('T')[0]);
-
-    document.getElementById('course_availabletimes').addEventListener('change', function () {
-        var selectedDate = this.value;
-        var slotsContainer = document.getElementById('available-hours');
-        slotsContainer.innerHTML = '';
-        if (availableDates.includes(selectedDate)) {
-            availableHours.forEach(hour => {
-                var slot = document.createElement('div');
-                slot.className = 'slot available';
-                slot.textContent = hour;
-                slotsContainer.appendChild(slot);
-            });
-        } else {
-            slotsContainer.innerHTML = '<div class="slot unavailable">Müsait saat yok</div>';
-        }
-    });
+    function validateForm() {
+        var selectedHoursInput = document.getElementById('editFormCourseAvailableHours');
+        selectedHoursInput.value = selectedHoursInput.value.split(',').map(h => h.trim()).filter(h => h !== '').join(',');
+        return true;
+    }
 </script>
 
 </body>
