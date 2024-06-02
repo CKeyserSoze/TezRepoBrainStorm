@@ -1,35 +1,56 @@
 package com.cobanoglu.denemebrain.controller;
 
 import com.cobanoglu.denemebrain.entity.Course;
+import com.cobanoglu.denemebrain.entity.CourseSchedule;
+import com.cobanoglu.denemebrain.service.CourseScheduleService;
 import com.cobanoglu.denemebrain.service.CourseService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/teacher/user")
 public class CourseEditController {
 
     private final CourseService courseService;
+    private final CourseScheduleService courseScheduleService;
 
-    public CourseEditController(CourseService courseService) {
+    public CourseEditController(CourseService courseService, CourseScheduleService courseScheduleService) {
         this.courseService = courseService;
+        this.courseScheduleService = courseScheduleService;
     }
 
     @GetMapping("/{id}/course/edit/{courseId}")
     public String showCourseEditPage(@PathVariable("id") Long id,
                                      @PathVariable("courseId") Long courseId,
+                                     @RequestParam(value = "date", required = false) String date,
                                      Model model) {
         Optional<Course> optionalCourse = courseService.getCourseById(courseId);
         if (optionalCourse.isPresent()) {
             Course course = optionalCourse.get();
             model.addAttribute("course", course);
-            Map<String, List<String>> availableHoursMap = courseService.parseAvailableHours(course.getAvailableHours());
-            model.addAttribute("availableHoursMap", availableHoursMap);
+
+            List<String> availableHours = Arrays.asList("09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00");
+
+            model.addAttribute("availableHours", availableHours);
+            model.addAttribute("selectedDate", date);
+
+            if (date != null && !date.isEmpty()) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                LocalDate formattedDate = LocalDate.parse(date, formatter);
+                List<CourseSchedule> schedules = courseScheduleService.getSchedulesByCourseAndDate(courseId, formattedDate.toString());
+                List<String> selectedUnavailableHours = schedules.stream()
+                        .flatMap(schedule -> Arrays.stream(schedule.getHours().split(",")))
+                        .collect(Collectors.toList());
+                model.addAttribute("selectedUnavailableHours", selectedUnavailableHours);
+            }
         } else {
             model.addAttribute("course", new Course());
         }
@@ -42,7 +63,7 @@ public class CourseEditController {
                                @RequestParam("course_name") String courseName,
                                @RequestParam("course_description") String courseDescription,
                                @RequestParam("course_price") int coursePrice,
-                               @RequestParam("course_availabletimes") String courseAvailableTimes,
+                               @RequestParam("selectedDate") String selectedDate,
                                @RequestParam("course_availablehours") String courseAvailableHours,
                                Model model) {
 
@@ -58,10 +79,26 @@ public class CourseEditController {
             course.setName(courseName);
             course.setDescription(courseDescription);
             course.setPrice(coursePrice);
-            course.setAvailableTimes(courseAvailableTimes);
-            course.setAvailableHours(courseAvailableHours);
-
             courseService.save(course);
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            LocalDate formattedDate = LocalDate.parse(selectedDate, formatter);
+
+            List<CourseSchedule> existingSchedules = courseScheduleService.getSchedulesByCourseAndDate(courseId, formattedDate.toString());
+
+            String cleanedHours = Arrays.stream(courseAvailableHours.split(","))
+                    .map(String::trim)
+                    .filter(h -> !h.contains("${"))
+                    .collect(Collectors.joining(","));
+
+            if (!existingSchedules.isEmpty()) {
+                CourseSchedule existingSchedule = existingSchedules.get(0);
+                existingSchedule.setHours(cleanedHours);
+                courseScheduleService.save(existingSchedule);
+            } else {
+                CourseSchedule newSchedule = new CourseSchedule(course, formattedDate.toString(), cleanedHours);
+                courseScheduleService.save(newSchedule);
+            }
 
             model.addAttribute("successMessage", "Kurs başarıyla güncellendi.");
         } else {

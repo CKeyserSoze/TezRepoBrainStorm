@@ -11,7 +11,7 @@
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
+            background-color: #f0f2f5;
             color: #343a40;
         }
         header {
@@ -20,19 +20,12 @@
             padding: 20px 0;
             text-align: center;
             margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         header .logo {
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-        header img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin-right: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
         }
         header h1 {
             margin: 0;
@@ -40,7 +33,7 @@
             cursor: pointer;
         }
         .container {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 0 20px;
         }
@@ -61,19 +54,21 @@
         .form-container {
             display: flex;
             align-items: flex-start;
+            gap: 20px;
         }
         .form-container img {
             width: 300px;
             height: 300px;
-            border-radius: 5px;
-            margin-right: 20px;
+            border-radius: 10px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
         .form-container .form-fields {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
         .form-fields label {
-            margin-bottom: 10px;
             font-weight: bold;
             color: #555;
         }
@@ -83,11 +78,10 @@
         .form-fields select {
             width: 100%;
             padding: 12px;
-            margin-bottom: 20px;
             border: 1px solid #ced4da;
             border-radius: 5px;
             font-size: 16px;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s;
             box-sizing: border-box;
         }
         .form-fields input[type="text"]:focus,
@@ -95,6 +89,7 @@
         .form-fields input[type="number"]:focus,
         .form-fields select:focus {
             border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
         .form-fields button {
             background-color: #007bff;
@@ -104,13 +99,13 @@
             padding: 15px 30px;
             font-size: 18px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            width: 100%;
+            transition: background-color 0.3s, transform 0.3s;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         .form-fields button:hover {
             background-color: #0056b3;
+            transform: scale(1.05);
         }
         .error-message {
             color: red;
@@ -118,23 +113,64 @@
             text-align: center;
         }
         textarea {
-            resize: none; /* Text alanının yeniden boyutlandırılmasını devre dışı bırakır */
+            resize: none;
         }
 
-
         .time-button {
-            padding: 10px 20px;
+            padding: 10px;
             margin: 5px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             color: white;
+            background-color: #28a745;
+            transition: background-color 0.3s, transform 0.3s;
+            width: 60px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .time-button.selected {
-            background-color: #28a745; /* Yeşil */
+            background-color: #dc3545;
+            transform: scale(1.1);
         }
-        .time-button:not(.selected) {
-            background-color: #dc3545; /* Kırmızı */
+        .time-button.disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .time-button:hover {
+            transform: scale(1.1);
+        }
+
+        .legend {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .legend div {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        .legend div span {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
+        .legend .available span {
+            background-color: #0056b3;
+        }
+        .legend .unavailable span {
+            background-color: #dc3545;
+        }
+        .time-buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
         }
 
     </style>
@@ -148,16 +184,13 @@
     </div>
 </header>
 <div class="container">
-
     <div class="course-form">
         <h2>Yeni Kurs Ekle</h2>
         <form id="courseForm" th:action="@{/teacher/user/{id}/addcourse(id=${id})}" method="post" onsubmit="return validateForm()">
-
             <div class="form-container">
                 <img src="/static/images/course-image2.jpg" alt="Kurs Görseli">
                 <input type="hidden" id="id" name="id" value="${id}">
                 <div class="form-fields">
-
                     <label for="courseName">Kurs Adı</label>
                     <input type="text" id="courseName" name="courseName" placeholder="Kurs Adı">
 
@@ -193,30 +226,9 @@
                     <label for="availableTimes">Müsait Zamanlar</label>
                     <input type="text" id="availableTimes" name="availableTimes" placeholder="Müsait Zamanlarınızı Seçin">
 
-
-                    <label for="availableTimes">Müsait Zamanlar</label>
-                    <input type="text" id="availableTimesAsHours" name="availableTimesAsHours" placeholder="Müsait Zamanlarınızı Seçin">
-                    <div>
-                        <button type="button" onclick="addTime('09:00')">09:00</button>
-                        <button type="button" onclick="addTime('10:00')">10:00</button>
-                        <button type="button" onclick="addTime('11:00')">11:00</button>
-                        <button type="button" onclick="addTime('12:00')">12:00</button>
-                        <button type="button" onclick="addTime('13:00')">13:00</button>
-                        <button type="button" onclick="addTime('14:00')">14:00</button>
-                        <button type="button" onclick="addTime('15:00')">15:00</button>
-                        <button type="button" onclick="addTime('16:00')">16:00</button>
-                        <button type="button" onclick="addTime('17:00')">17:00</button>
-                        <button type="button" onclick="addTime('18:00')">18:00</button>
-                        <button type="button" onclick="addTime('19:00')">19:00</button>
-                        <button type="button" onclick="addTime('20:00')">20:00</button>
-                        <button type="button" onclick="addTime('21:00')">21:00</button>
-                    </div>
-
-
-
                     <label for="availableTimesAsHours">Müsait Saatler</label>
-                    <input type="text" id="availableTimesAsHours" name="availableTimesAsHours" placeholder="Müsait Zamanlarınızı Seçin" readonly>
-                    <div id="timeButtons">
+                    <input type="text" id="availableTimesAsHours" name="availableTimesAsHours" placeholder="Müsait Saatleri Seçin" readonly>
+                    <div id="timeButtons" class="time-buttons-container">
                         <button type="button" class="time-button" onclick="toggleTime(this, '09:00')">09:00</button>
                         <button type="button" class="time-button" onclick="toggleTime(this, '10:00')">10:00</button>
                         <button type="button" class="time-button" onclick="toggleTime(this, '11:00')">11:00</button>
@@ -231,7 +243,10 @@
                         <button type="button" class="time-button" onclick="toggleTime(this, '20:00')">20:00</button>
                         <button type="button" class="time-button" onclick="toggleTime(this, '21:00')">21:00</button>
                     </div>
-
+                    <div class="legend">
+                        <div class="available"><span></span>Müsait</div>
+                        <div class="unavailable"><span></span>Meşgul</div>
+                    </div>
 
                     <button type="submit">Kursu Yayınla</button>
                     <div class="error-message" id="errorMessage" th:if="${errorMessage}" th:text="${errorMessage}"></div>
@@ -246,12 +261,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         flatpickr("#availableTimes", {
             mode: "multiple",
-            enableTime: true,
-
-            dateFormat: "Y-m-d",
-
-            dateFormat: "d-m-Y ",
-
+            dateFormat: "d-m-Y",
             minDate: "today",
             locale: {
                 firstDayOfWeek: 1,
@@ -266,87 +276,16 @@
             }
         });
 
-
         document.getElementById("courseForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Formun varsayılan davranışını engelle
+            event.preventDefault();
 
-            // URL'den id'yi al
             var url = window.location.pathname;
-            var id = url.split("/")[3]; // 0: "", 1: "teacher", 2: "user", 3: "id"
+            var id = url.split("/")[3];
 
-            // Formun action URL'sini oluştur
             var actionUrl = "/teacher/user/" + id + "/addcourse";
-
-            // Formun action özniteliğini güncelle
             document.getElementById("courseForm").action = actionUrl;
 
-            // Formu gönder
             this.submit();
-        });
-
-        function validateForm() {
-            var courseName = document.getElementById('courseName').value;
-            var description = document.getElementById('description').value;
-            var price = document.getElementById('price').value;
-            var errorMessage = document.getElementById('errorMessage');
-
-            if (courseName === '' || description === '' || price === '') {
-                errorMessage.textContent = 'Lütfen tüm alanları doldurun.';
-                return false;
-            } else {
-                errorMessage.textContent = '';
-                return true;
-            }
-        }
-    });
-
-    function addTime(time) {
-    var availableTimesAsHoursInput = document.getElementById('availableTimesAsHours');
-
-    if (availableTimesAsHoursInput.value !== '') {
-        availableTimesAsHoursInput.value += ', ' + time.split(':')[0];
-    } else {
-        availableTimesAsHoursInput.value = time.split(':')[0];
-    }
-}
-
-
-    flatpickr("#availableTimes", {
-    mode: "multiple", // Birden çok saat seçimine izin ver
-    enableTime: true, // Saat seçimini etkinleştir
-    dateFormat: "Y-m-d",
-    minDate: "today",
-    disable: [
-        { from: "10:00", to: "15:00" }
-    ],
-    locale: {
-        firstDayOfWeek: 1,
-        weekdays: {
-            shorthand: ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"],
-            longhand: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"],
-        },
-        months: {
-            shorthand: ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
-            longhand: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
-        },
-    }
-});
-
-
-        document.getElementById("courseForm").addEventListener("submit", function(event) {
-            if (!validateForm()) {
-                event.preventDefault(); // Formun varsayılan davranışını engelle
-            }
-
-            // URL'den id'yi al
-            var url = window.location.pathname;
-            var id = url.split("/")[3]; // 0: "", 1: "teacher", 2: "user", 3: "id"
-
-            // Formun action URL'sini oluştur
-            var actionUrl = "/teacher/user/" + id + "/addcourse";
-
-            // Formun action özniteliğini güncelle
-            document.getElementById("courseForm").action = actionUrl;
         });
 
         function validateForm() {
@@ -368,19 +307,18 @@
     function toggleTime(button, time) {
         var availableTimesAsHoursInput = document.getElementById('availableTimesAsHours');
         var times = availableTimesAsHoursInput.value ? availableTimesAsHoursInput.value.split(', ') : [];
-        var timeIndex = times.indexOf(time.split(':')[0]);
+        var timeIndex = times.indexOf(time);
 
         if (timeIndex > -1) {
             times.splice(timeIndex, 1);
             button.classList.remove('selected');
         } else {
-            times.push(time.split(':')[0]);
+            times.push(time);
             button.classList.add('selected');
         }
 
         availableTimesAsHoursInput.value = times.join(', ');
     }
-
 </script>
 </body>
 </html>
