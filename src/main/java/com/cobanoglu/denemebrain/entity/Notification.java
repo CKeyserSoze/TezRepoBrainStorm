@@ -3,13 +3,13 @@ package com.cobanoglu.denemebrain.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "taken_courses")
-public class TakenCourse {
+@Table(name = "notifications")
+public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "taken_courses_id")
-    private Long takenCoursesId;
+    @Column(name = "notification_id")
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
@@ -19,21 +19,18 @@ public class TakenCourse {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public TakenCourse() {
+    @ManyToOne
+    @JoinColumn(name = "teacher_id", nullable = false)
+    private Teacher teacher;
+
+    // Getter ve Setter metodları
+
+    public Long getId() {
+        return id;
     }
 
-    public TakenCourse(Long takenCoursesId, Course course, User user) {
-        this.takenCoursesId = takenCoursesId;
-        this.course = course;
-        this.user = user;
-    }
-
-    public Long getTakenCoursesId() {
-        return takenCoursesId;
-    }
-
-    public void setTakenCoursesId(Long takenCoursesId) {
-        this.takenCoursesId = takenCoursesId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Course getCourse() {
@@ -50,5 +47,13 @@ public class TakenCourse {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
     }
 }

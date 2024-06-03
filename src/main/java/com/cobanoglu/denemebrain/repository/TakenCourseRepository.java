@@ -8,5 +8,6 @@ import java.util.List;
 public interface TakenCourseRepository extends JpaRepository<TakenCourse, Long> {
 
     List<TakenCourse> findByUserId(Long userId);
+    List<TakenCourse> findByCourse_TeacherId(Long teacherId);
 
 }
