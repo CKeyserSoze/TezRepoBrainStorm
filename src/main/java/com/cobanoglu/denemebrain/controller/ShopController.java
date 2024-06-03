@@ -1,10 +1,8 @@
 package com.cobanoglu.denemebrain.controller;
 
-import com.cobanoglu.denemebrain.entity.Cart;
-import com.cobanoglu.denemebrain.entity.Course;
-import com.cobanoglu.denemebrain.entity.TakenCourse;
-import com.cobanoglu.denemebrain.entity.User;
+import com.cobanoglu.denemebrain.entity.*;
 import com.cobanoglu.denemebrain.service.CourseService;
+import com.cobanoglu.denemebrain.service.NotificationService;
 import com.cobanoglu.denemebrain.service.TakenCourseService;
 import com.cobanoglu.denemebrain.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,16 +23,19 @@ public class ShopController {
     private final UserService userService;
     private final CourseService courseService;
     private final TakenCourseService takenCourseService;
+
+    private final NotificationService notificationService;
     private HttpServletRequest request;
     @Autowired
     public ShopController(HttpServletRequest request,
                           CourseService courseService,
                           UserService userService,
-                          TakenCourseService takenCourseService) {
+                          TakenCourseService takenCourseService, NotificationService notificationService) {
         this.courseService = courseService;
         this.request = request;
         this.takenCourseService = takenCourseService;
         this.userService = userService;
+        this.notificationService = notificationService;
     }
 
 
@@ -183,35 +184,37 @@ public class ShopController {
                                 @RequestParam("cardNumber") String cardNumber,
                                 @RequestParam("expiryDate") String expiryDate,
                                 @RequestParam("cvc") String cvc,
-                                Model model){
+                                Model model) {
         User user = userService.getUserById(id);
         HttpSession session = request.getSession();
-        String CartKey = id.toString()+"cart";
+        String CartKey = id.toString() + "cart";
         Cart cart = (Cart) session.getAttribute(CartKey);
 
-
-        if(cardNumber.equals("4444 4444 4444 4444")
-            && expiryDate.equals("12/27")
-            && cvc.equals("444"))
-        {
-            for(var Course :cart.CartCourses)
-            {
+        if (cardNumber.equals("4444 4444 4444 4444")
+                && expiryDate.equals("12/27")
+                && cvc.equals("444")) {
+            for (Course course : cart.getCartCourses()) {
                 TakenCourse takenCourseToAdd = new TakenCourse();
-                takenCourseToAdd.setCourse(Course);
+                takenCourseToAdd.setCourse(course);
                 takenCourseToAdd.setUser(user);
                 takenCourseService.SaveTakenCourse(takenCourseToAdd);
 
+                // Bildirimi kaydet
+                Notification notification = new Notification();
+                notification.setCourse(course);
+                notification.setUser(user);
+                notification.setTeacher(course.getTeacher());
+                notificationService.saveNotification(notification);
             }
 
-            session.setAttribute(CartKey,null);
+            session.setAttribute(CartKey, null);
             return "redirect:/user/home/" + user.getId();
-        }else
-        {
+        } else {
             return "payment_screen";
         }
     }
 
-/*
+    /*
     private boolean isCourseInCart(Course course) {
         for (Course c : cart) {
             if (c.getId().equals(course.getId())) {
