@@ -46,9 +46,19 @@ public class CourseEditController {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 LocalDate formattedDate = LocalDate.parse(date, formatter);
                 List<CourseSchedule> schedules = courseScheduleService.getSchedulesByCourseAndDate(courseId, formattedDate.toString());
+
+                for(CourseSchedule schedule : schedules)
+                {
+                    String temp = schedule.getHours();
+                    temp = temp.replace("[","");
+                    temp = temp.replace("]","");
+                    schedule.setHours(temp);
+                }
+
                 List<String> selectedUnavailableHours = schedules.stream()
                         .flatMap(schedule -> Arrays.stream(schedule.getHours().split(",")))
                         .collect(Collectors.toList());
+
                 model.addAttribute("selectedUnavailableHours", selectedUnavailableHours);
             }
         } else {
@@ -66,6 +76,8 @@ public class CourseEditController {
                                @RequestParam("selectedDate") String selectedDate,
                                @RequestParam("course_availablehours") String courseAvailableHours,
                                Model model) {
+
+        courseAvailableHours = sortHours(courseAvailableHours);
 
         if (courseName.isBlank() || courseDescription.isBlank() || coursePrice <= 0) {
             model.addAttribute("errorMessage", "Kurs adı, açıklaması ve fiyatı boş bırakılamaz.");
@@ -106,5 +118,20 @@ public class CourseEditController {
         }
 
         return "redirect:/teacher/user/" + id + "/mycourses";
+    }
+
+    public static String sortHours(String hoursString) {
+        // Remove brackets and split by commas
+        String cleanedString = hoursString.replaceAll("[\\[\\]]", "");
+        List<String> hoursList = Arrays.asList(cleanedString.split(","));
+
+        // Sort the hours
+        List<String> sortedList = hoursList.stream()
+                .map(String::trim)
+                .sorted()
+                .collect(Collectors.toList());
+
+        // Join the sorted list back into a string
+        return String.join(",", sortedList);
     }
 }

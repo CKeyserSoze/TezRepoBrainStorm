@@ -57,6 +57,15 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public List<Course> getCoursesFilteredBy(String filter) {
+
+        if(filter.equals("rating_asc"))
+            return courseRepository.findByOrderByRatingAsc();
+        else if(filter.equals("rating_desc"))
+            return courseRepository.findByOrderByRatingDesc();
+        else if(filter.equals("price_asc"))
+            return courseRepository.findByOrderByPriceAsc();
+        else if(filter.equals("price_desc"))
+            return courseRepository.findByOrderByPriceDesc();
         return null;
     }
 

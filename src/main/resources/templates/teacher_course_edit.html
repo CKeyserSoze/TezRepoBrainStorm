@@ -224,7 +224,7 @@
                     <div id="available-hours">
                         <div th:each="hour : ${availableHours}">
                             <div th:class="${selectedUnavailableHours != null && selectedUnavailableHours.contains(hour) ? 'slot selected' : 'slot available'}"
-                                 th:text="${hour}" onclick="toggleHour(this, '${hour}')"></div>
+                                 th:text="${hour}" onclick="toggleHour(this)"></div>
                         </div>
                     </div>
                 </div>
@@ -270,17 +270,18 @@
         selectedHoursInput.value = selectedHoursInput.value.split(',').map(h => h.trim()).filter(h => h !== '').join(',');
     });
 
-    function toggleHour(element, hour) {
+    function toggleHour(element) {
         element.classList.toggle('selected');
         element.classList.toggle('available');
 
         var selectedHoursInput = document.getElementById('editFormCourseAvailableHours');
         var selectedHours = selectedHoursInput.value ? selectedHoursInput.value.split(',').map(h => h.trim()) : [];
+        var hour = element.textContent.trim();
 
         if (element.classList.contains('selected')) {
-            selectedHours = selectedHours.filter(h => h !== hour);
-        } else {
             selectedHours.push(hour);
+        } else {
+            selectedHours = selectedHours.filter(h => h !== hour);
         }
 
         selectedHoursInput.value = selectedHours.join(',');
@@ -294,4 +295,3 @@
 </script>
 
 </body>
-</html>
