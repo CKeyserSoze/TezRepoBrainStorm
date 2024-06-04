@@ -9,9 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user/home")
@@ -20,131 +23,91 @@ public class ShopController {
     private final UserService userService;
     private final CourseService courseService;
     private final TakenCourseService takenCourseService;
-
     private final NotificationService notificationService;
     private final MeetingsService meetingsService;
+    private final CourseScheduleService courseScheduleService;
     private HttpServletRequest request;
+
     @Autowired
     public ShopController(HttpServletRequest request,
                           CourseService courseService,
                           UserService userService,
-                          TakenCourseService takenCourseService, MeetingsService meetingsService, NotificationService notificationService) {
+                          TakenCourseService takenCourseService,
+                          MeetingsService meetingsService,
+                          NotificationService notificationService,
+                          CourseScheduleService courseScheduleService) {
         this.courseService = courseService;
         this.request = request;
         this.takenCourseService = takenCourseService;
         this.userService = userService;
         this.notificationService = notificationService;
         this.meetingsService = meetingsService;
+        this.courseScheduleService = courseScheduleService;
     }
 
-
-
     @GetMapping("{id}/shop")
-    public String showShopPage(@PathVariable("id") Long id,
-                               Model model){
+    public String showShopPage(@PathVariable("id") Long id, Model model) {
         HttpSession session = request.getSession();
-        String cartKey = id.toString()+"cart";
+        String cartKey = id.toString() + "cart";
         Cart cartInSession = new Cart();
 
-        if(session.getAttribute(cartKey) == null)
-        {
-            session.setAttribute(cartKey,cartInSession);
-        }
-        else
-        {
+        if (session.getAttribute(cartKey) == null) {
+            session.setAttribute(cartKey, cartInSession);
+        } else {
             cartInSession = (Cart) session.getAttribute(cartKey);
         }
 
         List<CourseBuyingModel> cart = cartInSession.CartCourses;
-
         int totalPrice = calculateTotalPrice(cart);
         model.addAttribute("totalPrice", totalPrice);
-
-
         model.addAttribute("courses", cart); // Tüm kursları model'e ekle
 
         return "shop_page";
     }
+
     @PostMapping("/{id}/shop/add")
-    public String AddToCart(@PathVariable("id") Long id,
+    public String addToCart(@PathVariable("id") Long id,
                             @RequestParam("courseId") Long courseId,
                             @RequestParam(value = "currentDate", required = false) String date,
                             @RequestParam(value = "course_availablehours", required = false) String selectedHour,
-                            Model model){
+                            Model model) {
         HttpSession session = request.getSession();
-        String cartKey = id.toString()+"cart";
+        String cartKey = id.toString() + "cart";
         Cart cartInSession = new Cart();
 
         CourseBuyingModel courseToAddCart = new CourseBuyingModel();
         List<Course> courses = courseService.getAllCourses();
-        for(var course : courses)
-        {
-            if(course.getId().equals(courseId))
-            {
+        for (var course : courses) {
+            if (course.getId().equals(courseId)) {
                 courseToAddCart.setCourse(course);
                 courseToAddCart.setDate(date);
                 courseToAddCart.setHour(selectedHour);
             }
         }
 
-        if(session.getAttribute(cartKey) == null)
-        {
+        if (session.getAttribute(cartKey) == null) {
             cartInSession.CartCourses.add(courseToAddCart);
-            session.setAttribute(cartKey,cartInSession);
-        }
-        else {
+            session.setAttribute(cartKey, cartInSession);
+        } else {
             cartInSession = (Cart) session.getAttribute(cartKey);
             cartInSession.CartCourses.add(courseToAddCart);
-            session.setAttribute(cartKey,cartInSession);
+            session.setAttribute(cartKey, cartInSession);
         }
         return "redirect:/user/home/" + id;
     }
-    /*
-    @GetMapping("/{id}/shop/add/{teacherId}")
-    public String AddToCartFromTeacherPage(@PathVariable("id") Long id,
-                                           @PathVariable("teacherId") Long teacherId,
-                                           @RequestParam("courseId") Long courseId,
-                                           Model model){
-        HttpSession session = request.getSession();
-        String cartKey = id.toString()+"cart";
-        Cart cartInSession = new Cart();
-
-        Course courseToAddCart = new Course();
-        List<Course> courses = courseService.getAllCourses();
-        for(var course : courses)
-        {
-            if(course.getId() == courseId)
-            {
-                courseToAddCart = course;
-            }
-        }
-
-        if(session.getAttribute(cartKey) == null)
-        {
-            cartInSession.CartCourses.add(courseToAddCart);
-            session.setAttribute(cartKey,cartInSession);
-        }
-        else {
-            cartInSession = (Cart) session.getAttribute(cartKey);
-            cartInSession.CartCourses.add(courseToAddCart);
-            session.setAttribute(cartKey,cartInSession);
-        }
-        return "redirect:/user/home/" + id + "/teacher/" + teacherId;
-    }
-    */
 
     @PostMapping("/{id}/shop/remove")
     public String removeCourseFromCart(@PathVariable("id") Long id,
                                        @RequestParam("courseId") Long courseId,
                                        Model model) {
         HttpSession session = request.getSession();
-        String cartKey = id.toString()+"cart";
+        String cartKey = id.toString() + "cart";
 
         Cart cartToSession = (Cart) session.getAttribute(cartKey);
 
         cartToSession.CartCourses.removeIf(courseBuyingmodel -> courseBuyingmodel.getCourse().getId() == courseId);
 
-        session.setAttribute(cartKey,cartToSession);
+        session.setAttribute(cartKey, cartToSession);
 
         List<CourseBuyingModel> cart = cartToSession.CartCourses;
 
@@ -152,16 +115,15 @@ public class ShopController {
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("courses", cart); // Tüm kursları modele ekle
         return "redirect:/user/home/" + id + "/shop?id=" + id; // Sepet sayfasına geri yönlendir ve hem id hem de courseId parametrelerini ekle
-
     }
-    @GetMapping("{id}/payment")
-    public String Payment(@PathVariable("id") Long id,
-                                       Model model){
 
+    @GetMapping("{id}/payment")
+    public String payment(@PathVariable("id") Long id, Model model) {
         return "payment_screen";
     }
+
     @PostMapping("{id}/payment")
-    public String PaymentFinish(@PathVariable("id") Long id,
+    public String paymentFinish(@PathVariable("id") Long id,
                                 @RequestParam("cardNumber") String cardNumber,
                                 @RequestParam("expiryDate") String expiryDate,
                                 @RequestParam("cvc") String cvc,
@@ -176,13 +138,13 @@ public class ShopController {
                 && cvc.equals("444")) {
             for (CourseBuyingModel course : cart.getCartCourses()) {
 
-                //TakenCourse Tablosuna Ekleme
+                // TakenCourse Tablosuna Ekleme
                 TakenCourse takenCourseToAdd = new TakenCourse();
                 takenCourseToAdd.setCourse(course.getCourse());
                 takenCourseToAdd.setUser(user);
-                takenCourseService.SaveTakenCourse(takenCourseToAdd);
+                takenCourseService.saveTakenCourse(takenCourseToAdd);
 
-                //Meetings Tablosuna Ekleme
+                // Meetings Tablosuna Ekleme
                 Meetings meetings = new Meetings();
                 meetings.setCourse(course.getCourse());
                 meetings.setUser(user);
@@ -197,13 +159,39 @@ public class ShopController {
                 notification.setCourse(course.getCourse());
                 notification.setUser(user);
                 notification.setTeacher(course.getCourse().getTeacher());
+                notification.setDate(course.getDate());
+                notification.setHour(course.getHour());
                 notificationService.saveNotification(notification);
+
+                // Seçilen saati kaydet
+                saveSelectedHour(course.getCourse().getId(), course.getDate(), course.getHour());
             }
 
             session.setAttribute(CartKey, null);
             return "redirect:/user/home/" + user.getId();
         } else {
             return "payment_screen";
+        }
+    }
+
+    private void saveSelectedHour(Long courseId, String date, String hour) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate formattedDate = LocalDate.parse(date, formatter);
+
+        List<CourseSchedule> existingSchedules = courseScheduleService.getSchedulesByCourseAndDate(courseId, formattedDate.toString());
+
+        String cleanedHour = Arrays.stream(hour.split(","))
+                .map(String::trim)
+                .filter(h -> !h.contains("${"))
+                .collect(Collectors.joining(","));
+
+        if (!existingSchedules.isEmpty()) {
+            CourseSchedule existingSchedule = existingSchedules.get(0);
+            existingSchedule.setHours(existingSchedule.getHours() + "," + cleanedHour);
+            courseScheduleService.save(existingSchedule);
+        } else {
+            CourseSchedule newSchedule = new CourseSchedule(courseService.getCourseById(courseId).get(), formattedDate.toString(), cleanedHour);
+            courseScheduleService.save(newSchedule);
         }
     }
 

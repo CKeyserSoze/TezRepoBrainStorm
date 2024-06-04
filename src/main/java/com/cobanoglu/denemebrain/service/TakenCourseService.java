@@ -11,5 +11,5 @@ public interface TakenCourseService {
 
     List<TakenCourse> findByUserId(Long userId);
     TakenCourse SaveTakenCourse(TakenCourse takenCourse);
-
+    void saveTakenCourse(TakenCourse takenCourseToAdd);
 }

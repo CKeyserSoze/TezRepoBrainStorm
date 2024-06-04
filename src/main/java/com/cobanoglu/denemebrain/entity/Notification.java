@@ -1,6 +1,7 @@
 package com.cobanoglu.denemebrain.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notifications")
@@ -22,6 +23,13 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
+
+    @Column(name = "date")
+    private String date;
+
+
+    @Column(name = "hour")
+    private String hour;
 
     // Getter ve Setter metodları
 
@@ -55,5 +63,21 @@ public class Notification {
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getHour() {
+        return hour;
+    }
+
+    public void setHour(String hour) {
+        this.hour = hour;
     }
 }

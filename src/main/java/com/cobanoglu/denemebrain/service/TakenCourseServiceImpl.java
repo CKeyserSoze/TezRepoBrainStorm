@@ -23,5 +23,10 @@ public class TakenCourseServiceImpl implements TakenCourseService{
     @Override
     public TakenCourse SaveTakenCourse(TakenCourse takenCourse) {return takenCourseRepository.save(takenCourse);}
 
+    @Override
+    public void saveTakenCourse(TakenCourse takenCourseToAdd) {
+        takenCourseRepository.save(takenCourseToAdd);
+    }
+
 
 }

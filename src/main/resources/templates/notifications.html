@@ -66,6 +66,14 @@
         .notification button:hover {
             background-color: #0056b3;
         }
+        .no-notifications {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 50vh;
+            font-size: 24px;
+            color: #6c757d;
+        }
     </style>
 </head>
 <body>
@@ -75,12 +83,14 @@
     </a>
 </header>
 <div class="container">
-    <div class="notifications-container">
+    <div th:if="${#lists.isEmpty(notifications)}" class="no-notifications">
+        <p>Herhangi bir bildirim yok.</p>
+    </div>
+    <div th:unless="${#lists.isEmpty(notifications)}" class="notifications-container">
         <div th:each="notification : ${notifications}" class="notification">
             <div>
                 <p>
-                    <strong th:text="${notification.user.getUsername()} + ' ' + ${notification.user.getSurname()}"></strong>
-                    "<span th:text="${notification.course.getName()}"></span>" adlı kursunuzu satın aldı.
+                    <strong th:text="${notification.user.getUsername()} + ' ' + ${notification.user.getSurname()}"></strong> adlı kullanıcı <span th:text="${notification.course.getName()}"></span> adlı kursunuzu <span th:text="${notification.date}"></span> tarihinde saat <span th:text="${notification.hour}"></span> için randevu oluşturdu.
                 </p>
             </div>
             <div>
