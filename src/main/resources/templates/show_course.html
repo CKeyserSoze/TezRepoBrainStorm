@@ -225,6 +225,11 @@
         .time-slots .selected {
             background-color: #dc3545;
             color: #ffffff;
+            cursor: not-allowed;
+        }
+        .time-slots .chosen {
+            background-color: #28a745;
+            color: #ffffff;
         }
         .legend {
             display: flex;
@@ -247,6 +252,9 @@
         }
         .legend .selected-box {
             background-color: #dc3545;
+        }
+        .legend .chosen-box {
+            background-color: #28a745;
         }
     </style>
 </head>
@@ -309,10 +317,13 @@
                         <div class="box selected-box"></div>
                         <span>Dolu</span>
                     </div>
+                    <div>
+                        <div class="box chosen-box"></div>
+                        <span>Seçilen</span>
+                    </div>
                 </div>
-                <div class="button-group">
-                    <button type="submit">Kaydet</button>
-                </div>
+                <button class="btn btn-link add-to-cart" type="submit"><i class="fas fa-cart-plus"></i> Sepete Ekle</button>
+
             </form>
 
             <a th:href="@{'/user/home/' + ${id} + '/shop/add'(id=${id}, courseId=${course.getId()})}" class="btn btn-link add-to-cart"><i class="fas fa-cart-plus"></i> Sepete Ekle</a>
@@ -368,20 +379,22 @@
     });
 
     function toggleHour(element) {
-        element.classList.toggle('selected');
-        element.classList.toggle('available');
-
-        var selectedHoursInput = document.getElementById('editFormCourseAvailableHours');
-        var selectedHours = selectedHoursInput.value ? selectedHoursInput.value.split(',').map(h => h.trim()) : [];
-        var hour = element.textContent.trim();
-
         if (element.classList.contains('selected')) {
-            selectedHours.push(hour);
-        } else {
-            selectedHours = selectedHours.filter(h => h !== hour);
+            return;
         }
 
-        selectedHoursInput.value = selectedHours.join(',');
+        var selectedElements = document.querySelectorAll('.slot.chosen');
+        selectedElements.forEach(function (el) {
+            el.classList.remove('chosen');
+            el.classList.add('available');
+        });
+
+        element.classList.toggle('chosen');
+        element.classList.toggle('available');
+
+        var selectedHour = element.textContent.trim();
+        var selectedHoursInput = document.getElementById('editFormCourseAvailableHours');
+        selectedHoursInput.value = selectedHour;
     }
 
     function validateForm() {
