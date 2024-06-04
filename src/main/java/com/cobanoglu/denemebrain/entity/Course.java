@@ -37,8 +37,6 @@ public class Course {
     @Column(name = "course_lesson", nullable = false)
     private String lesson;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CourseSchedule> schedules;
 
     public Course() {
     }
@@ -136,13 +134,5 @@ public class Course {
 
     public void setLesson(String lesson) {
         this.lesson = lesson;
-    }
-
-    public List<CourseSchedule> getSchedules() {
-        return schedules;
-    }
-
-    public void setSchedules(List<CourseSchedule> schedules) {
-        this.schedules = schedules;
     }
 }

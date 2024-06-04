@@ -290,40 +290,40 @@
                     <input type="text" id="course_availabletimes" name="date" placeholder="Tarih Seçin" th:value="${selectedDate}" onchange="document.getElementById('dateForm').submit();">
                 </div>
             </form>
-                <form th:action="@{/user/home/{id}/course/{courseId}(id=${id}, courseId=${course.getId()})}" method="post" onsubmit="return validateForm()">
-                    <input type="hidden" id="editFormId" name="id" th:value="${id}">
-                    <input type="hidden" id="currentDate" name="currentDate" th:value="${selectedDate}">
-                    <input type="hidden" id="editFormCourseId" name="courseId" th:value="${course.getId()}">
-                    <input type="hidden" id="editFormCourseName" name="course_name" th:value="${course.name}">
-                    <input type="hidden" id="editFormCourseDescription" name="course_description" th:value="${course.description}">
-                    <input type="hidden" id="editFormCoursePrice" name="course_price" th:value="${course.price}">
-                    <input type="hidden" id="editFormSelectedDate" name="selectedDate" th:value="${selectedDate}">
-                    <input type="hidden" id="editFormCourseAvailableHours" name="course_availablehours" th:value="${selectedUnavailableHours != null ? selectedUnavailableHours.toString().replaceAll('[\\[\\]]', '') : ''}">
-                    <div class="time-slots">
-                        <h3>Müsait Saatler</h3>
-                        <div id="available-hours">
-                            <div th:each="hour : ${availableHours}">
-                                <div th:class="${selectedUnavailableHours != null && selectedUnavailableHours.contains(hour) ? 'slot selected' : 'slot available'}"
-                                     th:text="${hour}" onclick="toggleHour(this)"></div>
-                            </div>
+            <form th:action="@{/user/home/{id}/shop/add(id=${id}, courseId=${course.getId()})}" method="post" onsubmit="return validateForm()">
+                <input type="hidden" id="editFormId" name="id" th:value="${id}">
+                <input type="hidden" id="currentDate" name="currentDate" th:value="${selectedDate}">
+                <input type="hidden" id="editFormCourseId" name="courseId" th:value="${course.getId()}">
+                <input type="hidden" id="editFormCourseName" name="course_name" th:value="${course.name}">
+                <input type="hidden" id="editFormCourseDescription" name="course_description" th:value="${course.description}">
+                <input type="hidden" id="editFormCoursePrice" name="course_price" th:value="${course.price}">
+                <input type="hidden" id="editFormSelectedDate" name="selectedDate" th:value="${selectedDate}">
+                <input type="hidden" id="editFormCourseAvailableHours" name="course_availablehours" th:value="${selectedUnavailableHours != null ? selectedUnavailableHours.toString().replaceAll('[\\[\\]]', '') : ''}">
+                <div class="time-slots">
+                    <h3>Müsait Saatler</h3>
+                    <div id="available-hours">
+                        <div th:each="hour : ${availableHours}">
+                            <div th:class="${selectedUnavailableHours != null && selectedUnavailableHours.contains(hour) ? 'slot selected' : 'slot available'}"
+                                 th:text="${hour}" onclick="toggleHour(this)"></div>
                         </div>
                     </div>
-                    <div class="legend">
-                        <div>
-                            <div class="box available-box"></div>
-                            <span>Müsait</span>
-                        </div>
-                        <div>
-                            <div class="box selected-box"></div>
-                            <span>Dolu</span>
-                        </div>
-                        <div>
-                            <div class="box chosen-box"></div>
-                            <span>Seçilen</span>
-                        </div>
+                </div>
+                <div class="legend">
+                    <div>
+                        <div class="box available-box"></div>
+                        <span>Müsait</span>
                     </div>
-                    <button class="btn btn-link add-to-cart" type="submit"><i class="fas fa-cart-plus"></i> Sepete Ekle</button>
-                </form>
+                    <div>
+                        <div class="box selected-box"></div>
+                        <span>Dolu</span>
+                    </div>
+                    <div>
+                        <div class="box chosen-box"></div>
+                        <span>Seçilen</span>
+                    </div>
+                </div>
+                <button class="btn btn-link add-to-cart" type="submit"><i class="fas fa-cart-plus"></i> Sepete Ekle</button>
+            </form>
 
         </div>
     </div>

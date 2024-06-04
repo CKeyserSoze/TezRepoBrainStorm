@@ -29,7 +29,9 @@ public class Meetings {
     private User user;
 
     @Column(name = "date", nullable = false)
-    private LocalDate date;
+    private String date;
+    @Column(name = "hour")
+    private String hour;
 
     public Long getId() {
         return id;
@@ -71,11 +73,19 @@ public class Meetings {
         this.user = user;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getHour() {
+        return hour;
+    }
+
+    public void setHour(String hour) {
+        this.hour = hour;
     }
 }

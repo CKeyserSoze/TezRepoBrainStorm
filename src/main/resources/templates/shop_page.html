@@ -76,17 +76,17 @@
 <div class="container" id="content">
     <!-- Dinamik kurslar için container -->
     <div th:each="course, courseStat : ${courses}" class="course-container" th:id="'course-' + ${courseStat.index}">
-
         <img src="/static/images/course-image2.jpg" alt="Course Image" width="150px">
         <div class="course-details">
-            <div class="course-title" th:text="${course.name}">Kurs Adı</div>
-            <p class="course-price" th:text="'Fiyat: ' + ${course.price} + ' TL'"></p>
+            <div class="course-title" th:text="${course.course.name}">Kurs Adı</div>
+            <p class="course-price" th:text="'Fiyat: ' + ${course.course.price} + ' TL'"></p>
+            <p class="course-price" th:text="'Tarih: ' + ${course.date}"></p>
+            <p class="course-price" th:text="'Saat: ' + ${course.hour}"></p>
         </div>
         <form th:action="@{'/user/home/' + ${id} + '/shop/remove'}" method="post">
-            <input type="hidden" name="courseId" th:value="${course.id}" />
+            <input type="hidden" name="courseId" th:value="${course.course.id}" />
             <button type="submit" class="btn btn-danger">Sil</button>
         </form>
-
     </div>
 
     <div id="total-price" th:text="'Toplam Fiyat: ' + ${totalPrice} + ' TL'"></div>

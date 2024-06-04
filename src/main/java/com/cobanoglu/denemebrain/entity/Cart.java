@@ -8,19 +8,18 @@ import lombok.Setter;
 import java.util.*;
 
 @Setter
-@Entity
 public class Cart {
 
 
-    public ArrayList<Course> CartCourses;
+    public ArrayList<CourseBuyingModel> CartCourses;
     private Long id;
     public Cart ()
     {
-        CartCourses = new ArrayList<Course>();
+        CartCourses = new ArrayList<CourseBuyingModel>();
     }
 
     @OneToMany
-    public ArrayList<Course> getCartCourses() {return CartCourses;}
+    public ArrayList<CourseBuyingModel> getCartCourses() {return CartCourses;}
 
     @Id
     public Long getId() {

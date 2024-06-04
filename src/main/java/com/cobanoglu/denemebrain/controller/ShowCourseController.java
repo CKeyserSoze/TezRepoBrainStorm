@@ -78,14 +78,4 @@ public class ShowCourseController {
 
         return "show_course";
     }
-    @PostMapping("/{id}/course/{courseId}")
-    public String showCoursePag(@PathVariable("id") Long userId,
-                                @PathVariable("courseId") Long courseId,
-                                @RequestParam(value = "currentDate", required = false) String date,
-                                @RequestParam(value = "course_availablehours", required = false) String selectedHour,
-                                 Model model) {
-
-
-        return "show_course";
-    }
 }
