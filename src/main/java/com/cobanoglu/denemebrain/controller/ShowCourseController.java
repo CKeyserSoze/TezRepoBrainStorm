@@ -9,10 +9,7 @@ import com.cobanoglu.denemebrain.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -78,6 +75,16 @@ public class ShowCourseController {
         List<Comments>  commentsList = commentsService.getCommentsByCourseId(courseId);
         model.addAttribute("courses", course);
         model.addAttribute("comments",commentsList);
+
+        return "show_course";
+    }
+    @PostMapping("/{id}/course/{courseId}")
+    public String showCoursePag(@PathVariable("id") Long userId,
+                                @PathVariable("courseId") Long courseId,
+                                @RequestParam(value = "currentDate", required = false) String date,
+                                @RequestParam(value = "course_availablehours", required = false) String selectedHour,
+                                 Model model) {
+
 
         return "show_course";
     }
