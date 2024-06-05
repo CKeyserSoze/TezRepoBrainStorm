@@ -191,9 +191,12 @@
     <div class="profile-edit">
         <div class="edit-form">
             <h2>Kursu Düzenle</h2>
-            <form th:action="@{/teacher/user/{id}/course/edit/{courseId}(id=${id}, courseId=${courseId})}" method="get" id="dateForm">
-                <input type="hidden" id="dateFormId" name="id" th:value="${id}">
-                <input type="hidden" id="dateFormCourseId" name="courseId" th:value="${courseId}">
+            <form th:action="@{/teacher/user/{id}/course/edit/{courseId}(id=${id}, courseId=${courseId})}" method="post" onsubmit="return validateForm()">
+                <input type="hidden" id="editFormId" name="id" th:value="${id}">
+                <input type="hidden" id="editFormCourseId" name="courseId" th:value="${courseId}">
+                <input type="hidden" id="editFormSelectedDate" name="selectedDate" th:value="${selectedDate}">
+                <input type="hidden" id="editFormCourseAvailableHours" name="course_availablehours" th:value="${selectedUnavailableHours != null ? selectedUnavailableHours.toString().replaceAll('[\\[\\]]', '') : ''}">
+
                 <div class="form-group">
                     <label for="dateFormCourseName">Kurs Adı</label>
                     <input type="text" id="dateFormCourseName" name="course_name" placeholder="Kurs Adını Girin" th:value="${course.name}">
@@ -208,17 +211,9 @@
                 </div>
                 <div class="form-group">
                     <label for="course_availabletimes">Tarih Seç</label>
-                    <input type="text" id="course_availabletimes" name="date" placeholder="Tarih Seçin" th:value="${selectedDate}" onchange="document.getElementById('dateForm').submit();">
+                    <input type="text" id="course_availabletimes" name="date" placeholder="Tarih Seçin" th:value="${selectedDate}" onchange="submitDateForm()">
                 </div>
-            </form>
-            <form th:action="@{/teacher/user/{id}/course/edit/{courseId}(id=${id}, courseId=${courseId})}" method="post" onsubmit="return validateForm()">
-                <input type="hidden" id="editFormId" name="id" th:value="${id}">
-                <input type="hidden" id="editFormCourseId" name="courseId" th:value="${courseId}">
-                <input type="hidden" id="editFormCourseName" name="course_name" th:value="${course.name}">
-                <input type="hidden" id="editFormCourseDescription" name="course_description" th:value="${course.description}">
-                <input type="hidden" id="editFormCoursePrice" name="course_price" th:value="${course.price}">
-                <input type="hidden" id="editFormSelectedDate" name="selectedDate" th:value="${selectedDate}">
-                <input type="hidden" id="editFormCourseAvailableHours" name="course_availablehours" th:value="${selectedUnavailableHours != null ? selectedUnavailableHours.toString().replaceAll('[\\[\\]]', '') : ''}">
+
                 <div class="time-slots">
                     <h3>Müsait Saatler</h3>
                     <div id="available-hours">
@@ -242,6 +237,10 @@
                     <button type="submit">Kaydet</button>
                     <button type="button" th:onclick="'window.location.href=\'/teacher/user/' + ${id} + '/course/delete/' + ${course.id} + '\' '">Sil</button>
                 </div>
+                <div id="errorMessage" class="error-message" style="display: none;">Lütfen tüm alanları doldurun.</div>
+            </form>
+            <form th:action="@{/teacher/user/{id}/course/edit/{courseId}(id=${id}, courseId=${courseId})}" method="get" id="dateForm">
+                <input type="hidden" name="selectedDate" id="hiddenDateField" th:value="${selectedDate}">
             </form>
         </div>
     </div>
@@ -251,7 +250,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         flatpickr("#course_availabletimes", {
-            dateFormat: "d-m-Y",  // Mevcut tarih formatını kullanın
+            dateFormat: "d-m-Y",
             minDate: "today",
             locale: {
                 firstDayOfWeek: 1,
@@ -288,10 +287,25 @@
     }
 
     function validateForm() {
-        var selectedHoursInput = document.getElementById('editFormCourseAvailableHours');
-        selectedHoursInput.value = selectedHoursInput.value.split(',').map(h => h.trim()).filter(h => h !== '').join(',');
-        return true;
+        var courseName = document.getElementById('dateFormCourseName').value;
+        var courseDescription = document.getElementById('dateFormCourseDescription').value;
+        var coursePrice = document.getElementById('dateFormCoursePrice').value;
+        var dateTime = document.getElementById('course_availabletimes').value;
+
+        if (courseName.trim() === '' || courseDescription.trim() === '' || coursePrice.trim() === '' || dateTime.trim() === '') {
+            document.getElementById('errorMessage').style.display = 'block'; // Uyarı mesajını göster
+            return false; // Form gönderimini durdur
+        }
+
+        return true; // Form gönderimine izin ver
+    }
+
+    function submitDateForm() {
+        var dateField = document.getElementById('course_availabletimes');
+        var hiddenDateField = document.getElementById('hiddenDateField');
+        hiddenDateField.value = dateField.value;
+        document.getElementById('dateForm').submit();
     }
 </script>
-
 </body>
+</html>

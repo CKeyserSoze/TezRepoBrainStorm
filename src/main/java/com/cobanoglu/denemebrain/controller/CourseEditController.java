@@ -30,7 +30,7 @@ public class CourseEditController {
     @GetMapping("/{id}/course/edit/{courseId}")
     public String showCourseEditPage(@PathVariable("id") Long id,
                                      @PathVariable("courseId") Long courseId,
-                                     @RequestParam(value = "date", required = false) String date,
+                                     @RequestParam(value = "selectedDate", required = false) String date,
                                      Model model) {
         Optional<Course> optionalCourse = courseService.getCourseById(courseId);
         if (optionalCourse.isPresent()) {

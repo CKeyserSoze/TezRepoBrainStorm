@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,7 +53,8 @@
             font-size: 16px;
             color: #6c757d;
         }
-        .notification button {
+        .notification a {
+            display: inline-block;
             background-color: #007bff;
             color: #ffffff;
             border: none;
@@ -61,10 +62,16 @@
             padding: 10px 20px;
             font-size: 14px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.3s;
         }
-        .notification button:hover {
+        .notification a:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        .notification a:active {
+            background-color: #004080;
+            transform: translateY(0);
         }
         .no-notifications {
             display: flex;
@@ -75,6 +82,23 @@
             color: #6c757d;
         }
     </style>
+    <script>
+        async function startMeeting(button) {
+            try {
+                const response = await fetch('/create-meet');
+                const meetLink = await response.text();
+                button.innerText = 'Görüşmeye Katıl';
+                button.onclick = null;
+                button.setAttribute('href', meetLink);
+                button.classList.remove('btn-primary');
+                button.classList.add('btn-success');
+                button.style.backgroundColor = '#28a745';
+            } catch (error) {
+                console.error('Error starting meeting:', error);
+                alert('Error starting meeting');
+            }
+        }
+    </script>
 </head>
 <body>
 <header>
@@ -94,7 +118,7 @@
                 </p>
             </div>
             <div>
-                <button>Görüşme Başlat</button>
+                <a class="btn btn-primary" href="#" onclick="startMeeting(this)">Görüşme Başlat</a>
             </div>
         </div>
     </div>
